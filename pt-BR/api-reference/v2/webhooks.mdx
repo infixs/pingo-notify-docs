@@ -1,0 +1,144 @@
+---
+title: "Webhooks"
+description: "Nesta seção, você aprende como integrar e utilizar webhooks e eventos de mensageria para conectar a aplicação aos seus projetos."
+icon: "webhook"
+---
+
+<Info>
+  **Pré-requisitos**
+  - Ter uma conta ativa no **Pingo Notify**.
+  - Dispor de um endpoint HTTP para receber as requisições — qualquer serviço de webhook pode ser utilizado.
+</Info>
+
+
+## Criar uma conexão
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <Card icon="qrcode" href="https://pingonotify.com/pt-BR/dashboard/connections">
+    <h3>1. Acessar Conexões</h3>
+    <p>
+      Entre na aba <strong>Conexões</strong> no dashboard e visualize todas as integrações criadas.
+    </p>
+  </Card>
+
+  <Card icon="plus">
+    <h3>2. Criar nova conexão</h3>
+    <p>
+      Clique em <strong>Criar</strong>, escolha um nome e ajuste as configurações conforme sua necessidade.
+    </p>
+  </Card>
+
+  <Card icon="expand">
+    <h3>3. Vincular ao WhatsApp</h3>
+    <p>
+      Depois de criar a conexão, clique no ícone do <strong>QR Code</strong> e escaneie-o usando o leitor de QR Code do WhatsApp.
+      É exatamente o mesmo processo utilizado no WhatsApp Web.
+    </p>
+  </Card>
+
+
+  <Card icon="wifi">
+    <h3>4. Conexão ativada</h3>
+    <p>
+      Após a leitura do QR Code, o status será atualizado automaticamente e a conexão ficará ativa.
+    </p>
+  </Card>
+
+</div>
+
+<Warning icon="triangle-exclamation">Mantenha o WhatsApp ativo no dispositivo vinculado.</Warning>
+
+## Configurar Webhooks
+
+Depois de criar sua conexão, você pode configurar webhooks para receber eventos em tempo real diretamente no seu endpoint HTTPS.
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <Card icon="link" href="https://pingonotify.com/dashboard/webhooks">
+    <h3>1. Definir a URL do Webhook</h3>
+    <p>
+      Informe a URL HTTPS do seu endpoint.  
+      É para essa rota que o Pingo Notify enviará todos os eventos selecionados.
+    </p>
+  </Card>
+
+  <Card icon="list">
+    <h3>2. Selecionar eventos de Webhook</h3>
+    <p>
+      Escolha quais eventos deseja escutar.  
+      A lista inclui ações como mensagens enviadas, recebidas, editadas e muito mais.
+    </p>
+  </Card>
+
+  <Card icon="toggle-on">
+    <h3>3. Ativar ou desativar o Webhook</h3>
+    <p>
+      Utilize o switch <strong>“Status do webhook”</strong> para habilitar ou pausar o envio de eventos sem precisar deletar a configuração.
+    </p>
+  </Card>
+
+  <Card icon="layer-group">
+    <h3>4. Agrupamento de mensagens</h3>
+    <p>
+      O campo <strong>“Habilitar agrupamento de mensagens”</strong> permite reduzir a quantidade de requisições agrupando eventos durante um intervalo de tempo.
+    </p>
+  </Card>
+
+  <Card icon="keyboard">
+    <h3>5. Simulação de digitação</h3>
+    <p>
+      A opção <strong>“Habilitar simulação de digitação”</strong> envia ao WhatsApp sinais de “digitando...” como um humano faria.
+    </p>
+  </Card>
+
+  <Card icon="timer">
+    <h3>6. Tempo de agrupamento</h3>
+    <p>
+      Caso o agrupamento esteja ativo, informe o tempo (em segundos) para reunir vários eventos antes de enviá-los em um único payload.
+    </p>
+  </Card>
+
+</div>
+
+---
+
+## Eventos Disponíveis
+
+Os eventos listados representam tudo o que o sistema pode enviar para seu webhook.  
+Aqui está a explicação de cada um:
+
+<Steps>
+
+  <Step title="Mensagem enviada">
+    Disparado quando **sua integração envia uma mensagem** pelo WhatsApp.  
+    Inclui dados como ID da mensagem, conteúdo, destinatário e horário.
+  </Step>
+
+  <Step title="Mensagem recebida">
+    Acionado quando **uma mensagem chega ao WhatsApp conectado**.  
+    Inclui texto, mídia, remetente e metadados de origem.
+  </Step>
+
+  <Step title="Mensagem atualizada">
+    Ocorre quando uma mensagem sofre alguma mudança — por exemplo, quando o WhatsApp atualiza o status interno.
+  </Step>
+
+  <Step title="Mensagem excluída">
+    Enviado quando uma mensagem é apagada (tanto por você quanto pelo remetente).  
+    Útil para sincronização de interfaces.
+  </Step>
+
+  <Step title="Mensagem editada">
+    Disparado quando uma mensagem existente é alterada no WhatsApp, recurso recente da plataforma.
+  </Step>
+
+  <Step title="Presença atualizada">
+    Indica mudanças no estado de presença do contato (digitando, gravando áudio, online etc.).
+  </Step>
+
+</Steps>
+
+<Callout icon="circle-info">
+Todos os eventos são enviados via requisições POST em JSON, permitindo processamento rápido e integração com qualquer backend.
+</Callout>

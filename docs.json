@@ -1,0 +1,106 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "Pingo Notify Docs",
+  "colors": {
+    "primary": "#16A34A",
+    "light": "#07C983",
+    "dark": "#15803D"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "languages": [
+      {
+        "language": "pt-BR",
+        "versions": [
+          {
+            "version": "v2",
+            "tabs": [
+              {
+                "tab": "Documentação",
+                "icon": "book",
+                "groups": [
+                  {
+                    "group": "Começando",
+                    "pages": [
+                      "pt-BR/index"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tab": "Referência da API",
+                "icon": "signs-post",
+                "groups": [
+                  {
+                    "group": "Documentação da API",
+                    "pages": [
+                      "pt-BR/api-reference/v2/index",
+                      "pt-BR/api-reference/v2/authentication",
+                      "pt-BR/api-reference/v2/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Conexões",
+                    "pages": [
+                      "pt-BR/api-reference/v2/endpoints/connections/qr-code",
+                      "pt-BR/api-reference/v2/endpoints/connections/paginate",
+                      "pt-BR/api-reference/v2/endpoints/connections/create",
+                      "pt-BR/api-reference/v2/endpoints/connections/update",
+                      "pt-BR/api-reference/v2/endpoints/connections/delete",
+                      "pt-BR/api-reference/v2/endpoints/connections/logout"
+                    ]
+                  },
+                  {
+                    "group": "Bate-papos",
+                    "pages": [
+                      "pt-BR/api-reference/v2/endpoints/chats/fetch",
+                      "pt-BR/api-reference/v2/endpoints/chats/presence"
+                    ]
+                  },
+                  {
+                    "group": "Mensagens",
+                    "pages": [
+                      "pt-BR/api-reference/v2/endpoints/messages/paginate",
+                      "pt-BR/api-reference/v2/endpoints/messages/sent-message",
+                      "pt-BR/api-reference/v2/endpoints/messages/sent-sticker",
+                      "pt-BR/api-reference/v2/endpoints/messages/download"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://pingonotify.com/dashboard"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "footer": {
+    "socials": {
+      "website": "https://pingonotify.com"
+    }
+  }
+}

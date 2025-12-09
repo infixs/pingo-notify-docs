@@ -1,0 +1,1479 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Pingo Notify API | v2.0.0",
+    "version": "1.0.0",
+    "description": "Converted from Postman collection: Pingo Notify API | v2.0.0"
+  },
+  "servers": [
+    {
+      "url": "{HOST}",
+      "description": "Base URL",
+      "variables": {
+        "HOST": {
+          "default": "https://pingonotify.com"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/v2/connections/{id}/chats/{remoteJid}/messages": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Pagination",
+        "operationId": "Connections_Chats_Messages_Pagination",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "10"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationMessagesResponse"
+                },
+                "example": {
+                  "data": [
+                    {
+                      "id": "cmita6yt404bpqm6huj3yn8bq",
+                      "key": {
+                        "id": "AC40239F05BA7693CE2883F2CB57D478",
+                        "fromMe": false,
+                        "remoteJid": "559999999999@s.whatsapp.net"
+                      },
+                      "pushName": "559999999999",
+                      "messageType": "conversation",
+                      "message": {
+                        "conversation": "Example message 👍🏿"
+                      },
+                      "messageTimestamp": 1764964260,
+                      "instanceId": "1398c32a-e288-4b6a-9f17-8d6b63ec3adb",
+                      "source": "android",
+                      "contextInfo": null,
+                      "messageUpdates": []
+                    }
+                  ],
+                  "total": 1,
+                  "totalPages": 1,
+                  "currentPage": 1,
+                  "perPage": 10
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Send",
+        "operationId": "Connections_Chats_Messages_Send",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "text": "Example",
+                "delay": 3000,
+                "mediaData": {
+                  "mediatype": "image",
+                  "mimetype": "image/png",
+                  "media": "https://pingonotify.com/_nuxt/whatsapp-business.vbksHJTr.png",
+                  "fileName": "Imagem.png"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Send",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SendMessageResponse"
+                },
+                "example": {
+                  "id": "019af014-b45d-7f40-b542-b89b15906ac9",
+                  "connectionId": "019af012-196b-7082-9787-2611fc9056d2",
+                  "wamid": "3EB073A8E0AE4FBCF4C911710CA212D4A11847A0",
+                  "remoteJid": "559999999999@s.whatsapp.net",
+                  "sender": "559999999999@s.whatsapp.net",
+                  "fromMe": true,
+                  "pushName": "Você",
+                  "messageType": "imageMessage",
+                  "messageTimestamp": 1764964479,
+                  "content": {
+                    "imageMessage": {
+                      "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m231/AQMZA5wsJuBmMnneE994xVr-Lgha3DV-nMU5K5SIX86-1u6bq7iyaJM9kCcnS-pRJqT9ZBY5MxVV55hslmT3TXMm0Xgon0nnxVKw4QUjkg?ccb=9-4&oh=01_Q5Aa3AHehkNJii1A5i6BNL5wPrHIsWKiy6gALtDwGE_bKAD-_g&oe=695AA13A&_nc_sid=e6ed6c&mms3=true",
+                      "width": 1528,
+                      "height": 1146,
+                      "caption": "Example",
+                      "mimetype": "image/png",
+                      "directPath": "/o1/v/t24/f2/m231/AQMZA5wsJuBmMnneE994xVr-Lgha3DV-nMU5K5SIX86-1u6bq7iyaJM9kCcnS-pRJqT9ZBY5MxVV55hslmT3TXMm0Xgon0nnxVKw4QUjkg?ccb=9-4&oh=01_Q5Aa3AHehkNJii1A5i6BNL5wPrHIsWKiy6gALtDwGE_bKAD-_g&oe=695AA13A&_nc_sid=e6ed6c",
+                      "fileLength": 109146,
+                      "contextInfo": {},
+                      "mediaKeyTimestamp": 1764964476
+                    }
+                  },
+                  "status": "PENDING",
+                  "source": "api",
+                  "createdAt": "2025-12-05T19:54:40.093Z",
+                  "updatedAt": "2025-12-05T19:54:40.093Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/connections/chats/messages/{wamid}/download": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Download",
+        "operationId": "Connections_Chats_Messages_Download",
+        "parameters": [
+          {
+            "name": "wamid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadMessageResponse"
+                },
+                "example": {
+                  "mediaType": "imageMessage",
+                  "fileName": "3EB073A8E0AE4FBCF4C911710CA212D4A11847A0.png",
+                  "caption": "Example",
+                  "size": {
+                    "fileLength": 109146,
+                    "height": 1146,
+                    "width": 1528
+                  },
+                  "mimetype": "image/png",
+                  "base64": "/9j/2wBDAAYE...",
+                  "buffer": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/sticker": {
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Send Sticker",
+        "operationId": "Connections_Chats_Messages_Send_Sticker",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendStickerResponse"
+              },
+              "example": {
+                "sticker": "https://pingonotify.com/_nuxt/whatsapp-business.vbksHJTr.png",
+                "delay": 3000
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Send Sticker",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "id": "019af015-373a-7192-a581-ce3449b76268",
+                  "connectionId": "019af012-196b-7082-9787-2611fc9056d2",
+                  "wamid": "3EB08E210705863267F612D983CD4922B594B934",
+                  "remoteJid": "559999999999@s.whatsapp.net",
+                  "sender": "559999999999@s.whatsapp.net",
+                  "fromMe": true,
+                  "pushName": "Você",
+                  "messageType": "stickerMessage",
+                  "messageTimestamp": 1764964512,
+                  "content": {
+                    "stickerMessage": {
+                      "url": "https://mmg.whatsapp.net/o1/v/t24/f2/m235/AQMjcES952VmLUcG5EjkvYSlirY3NvyvbUZ_S5veG0rt3866tj5OfBH9qYBHhiB0sgUJZSLaDHO2CmSQ8ED3X2q5XiQ8H0lpbnvHmscXwA?ccb=9-4&oh=01_Q5Aa3AFDRN4i2x_FYa3XTDAhkQPL1xi2lokTJn00yOpCqKr7Ow&oe=695A92DF&_nc_sid=e6ed6c&mms3=true",
+                      "mimetype": "image/webp",
+                      "directPath": "/o1/v/t24/f2/m235/AQMjcES952VmLUcG5EjkvYSlirY3NvyvbUZ_S5veG0rt3866tj5OfBH9qYBHhiB0sgUJZSLaDHO2CmSQ8ED3X2q5XiQ8H0lpbnvHmscXwA?ccb=9-4&oh=01_Q5Aa3AFDRN4i2x_FYa3XTDAhkQPL1xi2lokTJn00yOpCqKr7Ow&oe=695A92DF&_nc_sid=e6ed6c",
+                      "fileLength": 72088,
+                      "mediaKeyTimestamp": 1764964512
+                    }
+                  },
+                  "status": "PENDING",
+                  "source": "api",
+                  "createdAt": "2025-12-05T19:55:13.594Z",
+                  "updatedAt": "2025-12-05T19:55:13.594Z"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Fetch",
+        "operationId": "Connections_Chats_Fetch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatItem"
+                },
+                "example": [
+                  {
+                    "id": null,
+                    "remoteJid": "559999999999@s.whatsapp.net",
+                    "pushName": null,
+                    "profilePicUrl": null,
+                    "updatedAt": "2025-12-05T19:51:00.000Z",
+                    "windowStart": "2025-12-05T19:52:12.470Z",
+                    "windowExpires": "2025-12-06T19:52:12.470Z",
+                    "windowActive": true,
+                    "lastMessage": {
+                      "id": "cmita6yt404bpqm6huj3yn8bq",
+                      "key": {
+                        "id": "AC40239F05BA7693CE2883F2CB57D478",
+                        "fromMe": false,
+                        "remoteJid": "559999999999@s.whatsapp.net"
+                      },
+                      "pushName": "559999999999",
+                      "participant": null,
+                      "messageType": "conversation",
+                      "message": {
+                        "conversation": "Example message 👍🏿"
+                      },
+                      "contextInfo": null,
+                      "source": "android",
+                      "messageTimestamp": 1764964260,
+                      "instanceId": "1398c32a-e288-4b6a-9f17-8d6b63ec3adb",
+                      "sessionId": null,
+                      "status": "DELIVERY_ACK"
+                    },
+                    "unreadCount": 0,
+                    "isSaved": false
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/presence": {
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Sent Presence",
+        "operationId": "Connections_Chats_Sent_Presence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "presence": "composing",
+                "delay": 3000
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Sent Presence"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/qrcode": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Qr Code",
+        "operationId": "Connections_Qr_Code",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Qr Code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QrCodeResponse"
+                },
+                "example": {
+                  "connection": {
+                    "id": "019af018-d637-7513-a649-1893c5c2ebcf",
+                    "userId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                    "instanceId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                    "instanceName": "UCVnW7ERuLKmjBjRqrQQ7",
+                    "name": "Example",
+                    "status": "close",
+                    "profileName": null,
+                    "profilePictureUrl": null,
+                    "ownerJid": null,
+                    "phoneNumber": null,
+                    "createdAt": "2025-12-05T19:59:10.904Z",
+                    "updatedAt": "2025-12-05T19:59:10.904Z"
+                  },
+                  "pairingCode": null,
+                  "code": "2@i+P1xV...",
+                  "base64": "data:image/png;base64,iVB...",
+                  "count": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/connections": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Pagination",
+        "operationId": "Connections_Pagination",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pagination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginationConnectionsResponse"
+                },
+                "example": {
+                  "total": 1,
+                  "totalPages": 1,
+                  "currentPage": 1,
+                  "perPage": 2,
+                  "data": [
+                    {
+                      "id": "019af012-196b-7082-9787-2611fc9056d2",
+                      "userId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                      "instanceId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                      "instanceName": "YsTToR3Gsxc7Zp20ucE-F",
+                      "name": "Example Connection",
+                      "status": "open",
+                      "profileName": "Whatsapp Name",
+                      "profilePictureUrl": "https://pps.whatsapp.net/v/t61.24694-24/564883564_1435953528539845_1533569469035345174_n.jpg?ccb=11-4&oh=01_Q5Aa3AEhb_FKVx550BSz5-QBlnTtTJKzDSiNkRz31zY_AFREsQ&oe=694031D1&_nc_sid=5e03e0&_nc_cat=109",
+                      "ownerJid": "559999999999@s.whatsapp.net",
+                      "phoneNumber": "559999999999",
+                      "createdAt": "2025-12-05T19:51:49.356Z",
+                      "updatedAt": "2025-12-05T19:52:08.762Z",
+                      "settings": {
+                        "id": "cmita6gyv04b7qm6hbgwfv27d",
+                        "rejectCall": false,
+                        "groupsIgnore": false,
+                        "alwaysOnline": false,
+                        "readMessages": false,
+                        "readStatus": false,
+                        "syncFullHistory": false,
+                        "createdAt": "2025-12-05T19:51:49.351",
+                        "updatedAt": "2025-12-05T19:51:49.351"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Create",
+        "operationId": "Connections_Create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "name": "Example",
+                "settings": {
+                  "readMessages": true,
+                  "alwaysOnline": true,
+                  "groupsIgnore": true,
+                  "syncFullHistory": true,
+                  "rejectCall": true,
+                  "readStatus": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateConnectionResponse"
+                },
+                "example": {
+                  "connection": {
+                    "id": "019af018-d637-7513-a649-1893c5c2ebcf",
+                    "userId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                    "instanceId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                    "instanceName": "UCVnW7ERuLKmjBjRqrQQ7",
+                    "name": "Example",
+                    "status": "close",
+                    "profileName": null,
+                    "profilePictureUrl": null,
+                    "ownerJid": null,
+                    "phoneNumber": null,
+                    "createdAt": "2025-12-05T19:59:10.904Z",
+                    "updatedAt": "2025-12-05T19:59:10.904Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}": {
+      "patch": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Update",
+        "operationId": "Connections_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              },
+              "example": {
+                "name": "Example (change)",
+                "settings": {
+                  "rejectCall": false,
+                  "groupsIgnore": false,
+                  "alwaysOnline": false,
+                  "readMessages": false,
+                  "readStatus": false,
+                  "syncFullHistory": false
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateConnectionResponse"
+                },
+                "example": {
+                  "id": "019af018-d637-7513-a649-1893c5c2ebcf",
+                  "userId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                  "instanceId": "019aeb08-9aba-72d2-953f-d732ea1fdb96",
+                  "instanceName": "UCVnW7ERuLKmjBjRqrQQ7",
+                  "name": "Example (change)",
+                  "status": "connecting",
+                  "profileName": null,
+                  "profilePictureUrl": null,
+                  "ownerJid": null,
+                  "phoneNumber": null,
+                  "createdAt": "2025-12-05T19:59:10.904Z",
+                  "updatedAt": "2025-12-05T20:00:48.125Z",
+                  "settings": {
+                    "rejectCall": false,
+                    "groupsIgnore": false,
+                    "alwaysOnline": false,
+                    "readMessages": false,
+                    "readStatus": false,
+                    "syncFullHistory": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Delete",
+        "operationId": "Connections_Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Delete"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/logout": {
+      "delete": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Logout",
+        "operationId": "Connections_Logout",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Logout"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "apikey"
+      }
+    },
+    "schemas": {
+      "PaginationMessagesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageItem"
+            }
+          },
+          "total": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          },
+          "currentPage": {
+            "type": "integer"
+          },
+          "perPage": {
+            "type": "integer"
+          }
+        }
+      },
+      "MessageItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "$ref": "#/components/schemas/MessageKey"
+          },
+          "pushName": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "conversation",
+              "imageMessage",
+              "videoMessage",
+              "audioMessage",
+              "documentMessage",
+              "stickerMessage"
+            ]
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "conversation": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "messageTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "android",
+              "web",
+              "unknown",
+              "desktop",
+              "api"
+            ]
+          },
+          "contextInfo": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "mentionedJid": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "groupMentions": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pairedMediaType": {
+                "type": "number",
+                "nullable": true,
+                "format": "double"
+              },
+              "statusSourceType": {
+                "type": "number",
+                "nullable": true,
+                "format": "double"
+              }
+            }
+          },
+          "messageUpdates": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "ACK_ERROR",
+                "SERVER_ACK",
+                "DEVICE_ACK",
+                "DELIVERY_ACK",
+                "READ",
+                "PLAYED",
+                "PEER_ACK"
+              ]
+            }
+          }
+        }
+      },
+      "MessageKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fromMe": {
+            "type": "boolean"
+          },
+          "remoteJid": {
+            "type": "string"
+          }
+        }
+      },
+      "SendMessageResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "connectionId": {
+            "type": "string"
+          },
+          "wamid": {
+            "type": "string"
+          },
+          "remoteJid": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "fromMe": {
+            "type": "boolean"
+          },
+          "pushName": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "conversation",
+              "imageMessage",
+              "videoMessage",
+              "audioMessage",
+              "documentMessage",
+              "stickerMessage"
+            ]
+          },
+          "messageTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "imageMessage": {
+                "$ref": "#/components/schemas/ImageMessageContent"
+              }
+            },
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACK_ERROR",
+              "SERVER_ACK",
+              "DEVICE_ACK",
+              "READ",
+              "PLAYED",
+              "PEER_ACK",
+              "PENDING"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "android",
+              "web",
+              "unknown",
+              "desktop",
+              "api"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ImageMessageContent": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          },
+          "caption": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string",
+            "example": "image/png"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "integer"
+          },
+          "contextInfo": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "mentionedJid": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "groupMentions": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pairedMediaType": {
+                "type": "number",
+                "nullable": true,
+                "format": "double"
+              },
+              "statusSourceType": {
+                "type": "number",
+                "nullable": true,
+                "format": "double"
+              }
+            }
+          },
+          "mediaKeyTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DownloadMessageResponse": {
+        "type": "object",
+        "properties": {
+          "mediaType": {
+            "type": "string",
+            "enum": [
+              "imageMessage",
+              "videoMessage",
+              "audioMessage",
+              "documentMessage",
+              "stickerMessage"
+            ]
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "object",
+            "properties": {
+              "fileLength": {
+                "type": "integer"
+              },
+              "height": {
+                "type": "integer"
+              },
+              "width": {
+                "type": "integer"
+              }
+            }
+          },
+          "mimetype": {
+            "type": "string",
+            "example": "image/png"
+          },
+          "base64": {
+            "type": "string"
+          },
+          "buffer": {
+            "nullable": true
+          }
+        }
+      },
+      "SendStickerResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "connectionId": {
+            "type": "string"
+          },
+          "wamid": {
+            "type": "string"
+          },
+          "remoteJid": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "fromMe": {
+            "type": "boolean"
+          },
+          "pushName": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "conversation",
+              "imageMessage",
+              "videoMessage",
+              "audioMessage",
+              "documentMessage",
+              "stickerMessage"
+            ]
+          },
+          "messageTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "stickerMessage": {
+                "$ref": "#/components/schemas/StickerMessageContent"
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACK_ERROR",
+              "SERVER_ACK",
+              "DEVICE_ACK",
+              "READ",
+              "PLAYED",
+              "PEER_ACK",
+              "PENDING"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "android",
+              "web",
+              "unknown",
+              "desktop",
+              "api"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StickerMessageContent": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "mimetype": {
+            "type": "string",
+            "example": "image/webp"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "integer"
+          },
+          "mediaKeyTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ChatItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "remoteJid": {
+            "type": "string"
+          },
+          "pushName": {
+            "type": "string",
+            "nullable": true
+          },
+          "profilePicUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowExpires": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowActive": {
+            "type": "boolean"
+          },
+          "lastMessage": {
+            "$ref": "#/components/schemas/LastMessage"
+          },
+          "unreadCount": {
+            "type": "integer"
+          },
+          "isSaved": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LastMessage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "key": {
+            "$ref": "#/components/schemas/MessageKey"
+          },
+          "pushName": {
+            "type": "string",
+            "nullable": true
+          },
+          "participant": {
+            "type": "string",
+            "nullable": true
+          },
+          "messageType": {
+            "type": "string",
+            "enum": [
+              "conversation",
+              "imageMessage",
+              "videoMessage",
+              "audioMessage",
+              "documentMessage",
+              "stickerMessage"
+            ]
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "conversation": {
+                "type": "string"
+              }
+            }
+          },
+          "contextInfo": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "mentionedJid": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "groupMentions": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "pairedMediaType": {
+                "type": "number",
+                "nullable": true,
+                "format": "double"
+              },
+              "statusSourceType": {
+                "type": "number",
+                "nullable": true,
+                "format": "double"
+              }
+            }
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "ios",
+              "android",
+              "web",
+              "unknown",
+              "desktop",
+              "api"
+            ]
+          },
+          "messageTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "sessionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACK_ERROR",
+              "SERVER_ACK",
+              "DEVICE_ACK",
+              "READ",
+              "PLAYED",
+              "PEER_ACK",
+              "PENDING"
+            ]
+          }
+        }
+      },
+      "QrCodeResponse": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "$ref": "#/components/schemas/ConnectionCore"
+          },
+          "pairingCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string"
+          },
+          "base64": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ConnectionCore": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "instanceId": {
+            "type": "string"
+          },
+          "instanceName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "created",
+              "open",
+              "connecting",
+              "close"
+            ]
+          },
+          "profileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "profilePictureUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "ownerJid": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PaginationConnectionsResponse": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          },
+          "currentPage": {
+            "type": "integer"
+          },
+          "perPage": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionItem"
+            }
+          }
+        }
+      },
+      "ConnectionItem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConnectionCore"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "settings": {
+                "$ref": "#/components/schemas/ConnectionSettings"
+              }
+            }
+          }
+        ]
+      },
+      "ConnectionSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "rejectCall": {
+            "type": "boolean"
+          },
+          "groupsIgnore": {
+            "type": "boolean"
+          },
+          "alwaysOnline": {
+            "type": "boolean"
+          },
+          "readMessages": {
+            "type": "boolean"
+          },
+          "readStatus": {
+            "type": "boolean"
+          },
+          "syncFullHistory": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateConnectionResponse": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "$ref": "#/components/schemas/ConnectionCore"
+          }
+        }
+      },
+      "UpdateConnectionResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ConnectionCore"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "settings": {
+                "$ref": "#/components/schemas/ConnectionSettings"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ]
+}

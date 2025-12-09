@@ -1,0 +1,72 @@
+---
+title: "Autenticação"
+description: "Veja como gerar e gerenciar suas credenciais de acesso para utilizar a API com segurança."
+icon: "key"
+---
+
+# Gerando sua API Key
+
+Para usar a API do Pingo Notify, você precisa de uma API Key. Ela identifica e autoriza sua aplicação.
+
+Principais pontos:
+
+- A API Key é exibida apenas uma vez no momento da criação.
+- Inclua a chave no header `apikey` em todas as requisições.
+- Guarde a chave em local seguro; não a compartilhe em repositórios públicos.
+---
+
+
+## Criar sua chave — em 3 passos
+
+<Columns cols={2}>
+
+  <Card title="1. Cadastre-se" icon="user-plus" href="https://pingonotify.com/dashboard">
+    Crie sua conta no site e confirme o e‑mail para acessar o dashboard.
+  </Card>
+
+  <Card title="2. Abra o Dashboard" icon="gauge">
+    No painel, abra o menu lateral e escolha **Chaves de API**.
+  </Card>
+
+  <Card title="3. Crie a chave" icon="plus">
+    Clique em **Criar**, informe um nome (ex.: "Backend") e copie a chave exibida.
+  </Card>
+
+</Columns>
+
+## Uso — cabeçalho obrigatório
+
+Inclua em todas as requisições o header:
+
+`apikey: SUA_API_KEY_AQUI`
+
+Observação: se a chave for perdida, gere outra — a chave original não será mostrada novamente.
+
+## Exemplo (cURL)
+
+```bash
+curl -s -X POST 'https://api.pingonotify.com/v2/connections/{{id}}/chats/{{remoteJid}}/messages' \
+  --header 'Content-Type: application/json' \
+  --header 'apikey: SUA_API_KEY_AQUI' \
+  --data '{"text":"Olá — teste via API","delay":3000}'
+```
+
+**Substitua os parâmetros `{{id}}` e `{{remoteJid}}` pelos valores reais do seu ambiente:**
+
+* **`{{id}}`** → corresponde ao **ID da sua conexão** criada no painel do Pingo Notify.
+  É o identificador único da instância do WhatsApp que você está utilizando.
+
+* **`{{remoteJid}}`** → é o **número do destinatário**, no formato internacional utilizado pelo WhatsApp.
+  Representa a pessoa para quem você deseja enviar mensagens.
+
+## Checklist
+
+- Copiou a API Key no momento da criação?
+- Está enviando o header `apikey` em todas as requisições?
+- O endpoint usa `https` em produção?
+
+## Segurança — boas práticas
+
+- Não comite a API Key em código-fonte público.
+- Armazene em variáveis de ambiente ou em um cofre de segredos.
+- Rotacione chaves e remova chaves não utilizadas.
