@@ -96,6 +96,38 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Conexão ou remoteJid não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "connectionNotFound": {
+                    "summary": "Conexão não encontrada",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "remoteJidNotFound": {
+                    "summary": "remoteJid não encontrado",
+                    "value": {
+                      "message": "REMOTE_JID_NOT_FOUND",
+                      "hint": "Remote Jid not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       },
@@ -180,6 +212,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -224,6 +262,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -300,6 +344,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -365,6 +415,12 @@
                 ]
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -410,6 +466,12 @@
         "responses": {
           "204": {
             "description": "Sent Presence"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -461,6 +523,26 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Qr Code",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "CONNECTION_NOT_FOUND",
+                  "hint": "Connection not found."
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -535,6 +617,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       },
@@ -591,6 +679,31 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Requisição inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": [
+                    "name must be longer than or equal to 3 characters",
+                    "name must be shorter than or equal to 255 characters",
+                    "name must be a string"
+                  ],
+                  "error": "Bad Request",
+                  "statusCode": 400
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -664,6 +777,26 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Conexão não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "CONNECTION_NOT_FOUND",
+                  "hint": "Connection not found."
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       },
@@ -686,6 +819,26 @@
         "responses": {
           "204": {
             "description": "Delete"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Conexão não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "CONNECTION_NOT_FOUND",
+                  "hint": "Connection not found."
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -710,6 +863,26 @@
         "responses": {
           "204": {
             "description": "Logout"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Conexão não encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "CONNECTION_NOT_FOUND",
+                  "hint": "Connection not found."
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -772,12 +945,7 @@
             ]
           },
           "message": {
-            "type": "object",
-            "properties": {
-              "conversation": {
-                "type": "string"
-              }
-            },
+            "$ref": "#/components/schemas/MessageDataDto",
             "additionalProperties": true
           },
           "messageTimestamp": {
@@ -1046,7 +1214,11 @@
             "type": "string"
           },
           "buffer": {
-            "nullable": true
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
           }
         }
       },
@@ -1227,12 +1399,7 @@
             ]
           },
           "message": {
-            "type": "object",
-            "properties": {
-              "conversation": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/components/schemas/MessageDataDto"
           },
           "contextInfo": {
             "type": "object",
@@ -1468,6 +1635,263 @@
             }
           }
         ]
+      },
+      "ContextInfoDto": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "mentionedJid": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "groupMentions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "pairedMediaType": {
+            "type": "number"
+          },
+          "statusSourceType": {
+            "type": "number"
+          }
+        }
+      },
+      "ImageMessageDto": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "caption": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "mediaKeyTimestamp": {
+            "type": "number"
+          },
+          "contextInfo": {
+            "$ref": "#/components/schemas/ContextInfoDto"
+          }
+        }
+      },
+      "VideoMessageDto": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "number"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "caption": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "mediaKeyTimestamp": {
+            "type": "number"
+          },
+          "contextInfo": {
+            "$ref": "#/components/schemas/ContextInfoDto"
+          },
+          "externalShareFullVideoDurationInSeconds": {
+            "type": "number"
+          }
+        }
+      },
+      "AudioMessageDto": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "number"
+          },
+          "seconds": {
+            "type": "number"
+          },
+          "ptt": {
+            "type": "boolean"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "mediaKeyTimestamp": {
+            "type": "number"
+          }
+        }
+      },
+      "DocumentMessageDto": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "number"
+          },
+          "pageCount": {
+            "type": "number"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "mediaKeyTimestamp": {
+            "type": "number"
+          }
+        }
+      },
+      "StickerMessageDto": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "mimetype": {
+            "type": "string"
+          },
+          "fileLength": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "directPath": {
+            "type": "string"
+          },
+          "mediaKeyTimestamp": {
+            "type": "number"
+          },
+          "isAnimated": {
+            "type": "boolean"
+          },
+          "stickerSentTs": {
+            "type": "number"
+          },
+          "isAvatar": {
+            "type": "boolean"
+          },
+          "isAiSticker": {
+            "type": "boolean"
+          },
+          "isLottie": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MessageDataDto": {
+        "type": "object",
+        "properties": {
+          "conversation": {
+            "type": "string"
+          },
+          "imageMessage": {
+            "$ref": "#/components/schemas/ImageMessageDto"
+          },
+          "videoMessage": {
+            "$ref": "#/components/schemas/VideoMessageDto"
+          },
+          "audioMessage": {
+            "$ref": "#/components/schemas/AudioMessageDto"
+          },
+          "documentMessage": {
+            "$ref": "#/components/schemas/DocumentMessageDto"
+          },
+          "stickerMessage": {
+            "$ref": "#/components/schemas/StickerMessageDto"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string",
+            "description": "O campo hint é definido com base na linguagem do último login. Se o usuário não estiver autenticado, utiliza o valor do Accept-Language."
+          }
+        }
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Erro de autenticação",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "message": "UNAUTHORIZED",
+              "hint": "The provided credentials are invalid or have expired. Please log in again."
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Erro interno inesperado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "message": "UNEXPECTED_ERROR",
+              "hint": "An unexpected error occurred. Please try again later."
+            }
+          }
+        }
       }
     }
   },
