@@ -171,7 +171,12 @@
                     "properties": {
                       "mediatype": {
                         "type": "string",
-                        "enum": ["image", "video", "audio", "document"]
+                        "enum": [
+                          "image",
+                          "video",
+                          "audio",
+                          "document"
+                        ]
                       },
                       "mimetype": {
                         "type": "string"
@@ -184,7 +189,12 @@
                         "type": "string"
                       }
                     },
-                    "required": ["mediatype", "mimetype", "media", "fileName"]
+                    "required": [
+                      "mediatype",
+                      "mimetype",
+                      "media",
+                      "fileName"
+                    ]
                   },
                   "caption": {
                     "type": "string"
@@ -390,7 +400,9 @@
                     "minimum": 500
                   }
                 },
-                "required": ["sticker"]
+                "required": [
+                  "sticker"
+                ]
               },
               "example": {
                 "sticker": "https://pingonotify.com/_nuxt/whatsapp-business.vbksHJTr.png",
@@ -589,11 +601,20 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["presence", "delay"],
+                "required": [
+                  "presence",
+                  "delay"
+                ],
                 "properties": {
                   "presence": {
                     "type": "string",
-                    "enum": ["composing", "paused", "recording", "available", "unavailable"]
+                    "enum": [
+                      "composing",
+                      "paused",
+                      "recording",
+                      "available",
+                      "unavailable"
+                    ]
                   },
                   "delay": {
                     "type": "integer",
@@ -809,7 +830,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name", "settings"],
+                "required": [
+                  "name",
+                  "settings"
+                ],
                 "properties": {
                   "name": {
                     "type": "string",
