@@ -148,7 +148,46 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "object",
+              "properties": {
+                "mediaData": {
+                  "type": "object",
+                  "properties": {
+                    "mediatype": {
+                      "type": "string",
+                      "enum": [
+                        "image",
+                        "video",
+                        "audio",
+                        "document"
+                      ]
+                    },
+                    "mimetype": {
+                      "type": "string"
+                    },
+                    "media": {
+                      "type": "string",
+                      "description": "Media URL or Base64"
+                    },
+                    "fileName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "mediatype",
+                    "mimetype",
+                    "media",
+                    "fileName"
+                  ]
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "delay": {
+                  "type": "integer",
+                  "minimum": 500
+                }
+              }
             }
           },
           {
@@ -350,7 +389,20 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SendStickerResponse"
+                "type": "object",
+                "properties": {
+                  "sticker": {
+                    "type": "string",
+                    "description": "Media URL or Base64"
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "minimum": 500
+                  }
+                },
+                "required": [
+                  "sticker"
+                ]
               },
               "example": {
                 "sticker": "https://pingonotify.com/_nuxt/whatsapp-business.vbksHJTr.png",
@@ -365,7 +417,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "$ref": "#/components/schemas/SendStickerResponse"
                 },
                 "examples": {
                   "Sticker sent": {
@@ -548,7 +600,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": ["presence", "delay"],
+                "properties": {
+                  "presence": {
+                    "type": "string",
+                    "enum": ["composing", "paused", "recording", "available", "unavailable"]
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "minimum": 500
+                  }
+                }
               },
               "example": {
                 "presence": "composing",
@@ -757,7 +820,38 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "required": ["name", "settings"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 255
+                  },
+                  "settings": {
+                    "type": "object",
+                    "properties": {
+                      "readMessages": {
+                        "type": "boolean"
+                      },
+                      "alwaysOnline": {
+                        "type": "boolean"
+                      },
+                      "groupsIgnore": {
+                        "type": "boolean"
+                      },
+                      "syncFullHistory": {
+                        "type": "boolean"
+                      },
+                      "rejectCall": {
+                        "type": "boolean"
+                      },
+                      "readStatus": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
               },
               "example": {
                 "name": "Example",
@@ -849,7 +943,37 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 255
+                  },
+                  "settings": {
+                    "type": "object",
+                    "properties": {
+                      "readMessages": {
+                        "type": "boolean"
+                      },
+                      "alwaysOnline": {
+                        "type": "boolean"
+                      },
+                      "groupsIgnore": {
+                        "type": "boolean"
+                      },
+                      "syncFullHistory": {
+                        "type": "boolean"
+                      },
+                      "rejectCall": {
+                        "type": "boolean"
+                      },
+                      "readStatus": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                }
               },
               "example": {
                 "name": "Example (change)",
