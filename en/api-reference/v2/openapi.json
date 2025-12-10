@@ -11,7 +11,7 @@
       "description": "Base URL",
       "variables": {
         "HOST": {
-          "default": "https://pingonotify.com"
+          "default": "https://api.pingonotify.com"
         }
       }
     }
