@@ -23,8 +23,7 @@
                   {
                     "group": "Getting Started",
                     "pages": [
-                      "en/index",
-                      "en/plugins"
+                      "en/index"
                     ]
                   },
                   {
@@ -33,6 +32,12 @@
                       "en/connections",
                       "en/integrations",
                       "en/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Extensions",
+                    "pages": [
+                      "en/plugins"
                     ]
                   },
                   {
@@ -101,8 +106,7 @@
                   {
                     "group": "Começando",
                     "pages": [
-                      "pt-BR/index",
-                      "pt-BR/plugins"
+                      "pt-BR/index"
                     ]
                   },
                   {
@@ -111,6 +115,12 @@
                       "pt-BR/connections",
                       "pt-BR/integrations",
                       "pt-BR/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Extensões",
+                    "pages": [
+                      "pt-BR/plugins"
                     ]
                   },
                   {
