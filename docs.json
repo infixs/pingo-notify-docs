@@ -12,9 +12,6 @@
     "languages": [
       {
         "language": "en",
-        "openapi": [
-          "en/api-reference/v2/openapi.json"
-        ],
         "versions": [
           {
             "version": "v2",
@@ -98,9 +95,6 @@
       },
       {
         "language": "pt-BR",
-        "openapi": [
-          "pt-BR/api-reference/v2/openapi.json"
-        ],
         "versions": [
           {
             "version": "v2",
