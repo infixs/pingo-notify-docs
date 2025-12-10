@@ -148,46 +148,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "mediaData": {
-                  "type": "object",
-                  "properties": {
-                    "mediatype": {
-                      "type": "string",
-                      "enum": [
-                        "image",
-                        "video",
-                        "audio",
-                        "document"
-                      ]
-                    },
-                    "mimetype": {
-                      "type": "string"
-                    },
-                    "media": {
-                      "type": "string",
-                      "description": "Media URL or Base64"
-                    },
-                    "fileName": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "mediatype",
-                    "mimetype",
-                    "media",
-                    "fileName"
-                  ]
-                },
-                "caption": {
-                  "type": "string"
-                },
-                "delay": {
-                  "type": "integer",
-                  "minimum": 500
-                }
-              }
+              "type": "string"
             }
           },
           {
@@ -203,7 +164,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "type": "object",
+                "properties": {
+                  "mediaData": {
+                    "type": "object",
+                    "properties": {
+                      "mediatype": {
+                        "type": "string",
+                        "enum": [
+                          "image",
+                          "video",
+                          "audio",
+                          "document"
+                        ]
+                      },
+                      "mimetype": {
+                        "type": "string"
+                      },
+                      "media": {
+                        "type": "string",
+                        "description": "Media URL or Base64"
+                      },
+                      "fileName": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "mediatype",
+                      "mimetype",
+                      "media",
+                      "fileName"
+                    ]
+                  },
+                  "caption": {
+                    "type": "string"
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "minimum": 500
+                  }
+                }
               },
               "example": {
                 "text": "Example",
@@ -601,11 +601,20 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["presence", "delay"],
+                "required": [
+                  "presence",
+                  "delay"
+                ],
                 "properties": {
                   "presence": {
                     "type": "string",
-                    "enum": ["composing", "paused", "recording", "available", "unavailable"]
+                    "enum": [
+                      "composing",
+                      "paused",
+                      "recording",
+                      "available",
+                      "unavailable"
+                    ]
                   },
                   "delay": {
                     "type": "integer",
@@ -821,7 +830,10 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["name", "settings"],
+                "required": [
+                  "name",
+                  "settings"
+                ],
                 "properties": {
                   "name": {
                     "type": "string",
