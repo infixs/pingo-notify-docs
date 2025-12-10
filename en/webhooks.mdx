@@ -1,0 +1,137 @@
+---
+title: Webhooks
+description: Receive WhatsApp events in real time by linking webhooks to one or more connections in Pingo Notify.
+icon: webhook
+---
+
+## What are Webhooks?
+
+Webhooks allow **Pingo Notify to notify your application** whenever something happens on WhatsApp.
+
+<Info>
+  Think of webhooks as automatic alerts sent to your system.
+</Info>
+
+Whenever an event occurs, Pingo Notify sends this information to a URL configured by you.
+
+---
+
+## Connections and Webhooks
+
+<Info>
+  The relationship between connections and webhooks is flexible.
+</Info>
+
+- A connection can be linked to multiple webhooks  
+- A webhook can receive events from multiple connections  
+
+This allows different integration combinations, depending on your system’s needs.
+
+---
+
+## When should you use Webhooks?
+
+Use webhooks when you want to:
+
+- Receive notifications about sent or received messages  
+- Automate processes based on WhatsApp  
+- Update systems in real time  
+- Integrate WhatsApp with other applications  
+
+If you only send messages, using webhooks is optional.
+
+---
+
+## How it works
+
+<Info>
+  Basic flow:  
+  **WhatsApp → Connection → Pingo Notify → Webhook → Your application**
+</Info>
+
+Whenever something happens on any linked connection, the event is sent to the webhook.
+
+---
+
+## Configure a Webhook
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <Card icon="link">
+    <h3>Webhook URL</h3>
+    <p>
+      Enter the HTTPS address that will receive the events.
+    </p>
+  </Card>
+
+  <Card icon="list">
+    <h3>Select events</h3>
+    <p>
+      Choose which types of events your application should receive.
+    </p>
+  </Card>
+
+  <Card icon="toggle-on">
+    <h3>Webhook status</h3>
+    <p>
+      Enable or pause event delivery when needed.
+    </p>
+  </Card>
+
+  <Card icon="layer-group">
+    <h3>Link connections</h3>
+    <p>
+      Select one or more connections that will trigger events for this webhook.
+    </p>
+  </Card>
+
+</div>
+
+---
+
+## Available events
+
+The main events that can be sent are:
+
+<Steps>
+
+  <Step title="Message sent">
+    When a connection sends a message via WhatsApp.
+  </Step>
+
+  <Step title="Message received">
+    When a message arrives at the connected WhatsApp.
+  </Step>
+
+  <Step title="Message edited or deleted">
+    When a message is changed or removed.
+  </Step>
+
+  <Step title="Presence updated">
+    When there is a change in the contact’s presence state.
+  </Step>
+
+</Steps>
+
+---
+
+## What Webhooks do and do not do
+
+<Callout icon="circle-info">
+- Receive events in real time  
+- Can be linked to multiple connections  
+- Do not send messages  
+- Do not create connections  
+</Callout>
+
+---
+
+## Summary
+
+<Info>
+  - Webhooks receive WhatsApp events  
+  - A webhook can listen to multiple connections  
+  - A connection can trigger events to multiple webhooks  
+</Info>
+
+Use webhooks when your application needs to automatically react to what happens on one or more connections.

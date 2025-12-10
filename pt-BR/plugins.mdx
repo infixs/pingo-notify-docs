@@ -1,0 +1,125 @@
+---
+title: Plugin WordPress
+description: Plugin WordPress que conecta eventos do seu site ao Pingo Notify para envio automático de notificações.
+icon: "wordpress"
+---
+
+import { Steps } from "nextra/components";
+
+# Visão geral
+
+[<img
+  src="https://ps.w.org/infixs-pingo-notify/assets/banner-1544x500.png?rev=3407499"
+  alt="Pingo Notify WordPress Plugin Banner"
+/>](https://wordpress.org/plugins/infixs-pingo-notify/)
+
+Este **[plugin WordPress](https://wordpress.org/plugins/infixs-pingo-notify/)** integra seu site ao **Pingo Notify**, permitindo enviar notificações automáticas a partir de eventos do WordPress.
+
+<Info>
+  O plugin funciona apenas como **ponte** entre o WordPress e o Pingo Notify.  
+  Ele não envia mensagens por conta própria.
+</Info>
+
+---
+
+## O que o plugin faz
+
+- Conecta o WordPress ao Pingo Notify  
+- Captura eventos do site (ex.: WooCommerce)  
+- Envia esses eventos ao Pingo Notify  
+- Permite configurações de integração direto no painel do WordPress  
+
+---
+
+## Dependência obrigatória
+
+<Warning>
+  Para o plugin funcionar, você precisa ter uma conta no **Pingo Notify**.
+</Warning>
+
+O Pingo Notify é o serviço responsável por processar e enviar as mensagens.
+
+---
+
+## Plano necessário
+
+Para usar o plugin, é preciso ter um plano ativo no Pingo Notify.
+
+<Info>
+  Você pode **começar com um plano gratuito**, que permite integrar o plugin e testar o envio de notificações.
+</Info>
+
+Planos pagos estão disponíveis caso você precise de mais capacidade.
+
+---
+
+## Como o plugin funciona
+
+<Info>
+  Fluxo básico:  
+  **WordPress → Plugin → Pingo Notify → Mensagem enviada**
+</Info>
+
+O plugin detecta o evento no WordPress e envia as informações ao Pingo Notify, que realiza o envio.
+
+---
+
+## Instalação
+
+<Steps>
+  <Steps.Step title="Instalar o plugin">
+    Plugins → Adicionar novo → Buscar por **Pingo Notify** → Instalar e ativar
+  </Steps.Step>
+
+  <Steps.Step title="Criar conta no Pingo Notify">
+    Criar conta no site do Pingo Notify e escolher um plano (pode começar pelo gratuito)
+  </Steps.Step>
+
+  <Steps.Step title="Conectar o plugin">
+    Informar as credenciais do Pingo Notify no painel do WordPress
+  </Steps.Step>
+
+  <Steps.Step title="Configurar eventos">
+    Definir quais eventos do site vão gerar notificações
+  </Steps.Step>
+</Steps>
+
+---
+
+## Integração com WooCommerce
+
+O plugin pode capturar eventos como:
+
+- Novo pedido  
+- Mudança de status  
+- Pedido concluído  
+
+<Info>
+  O WooCommerce gera o evento →  
+  o plugin envia para o Pingo Notify →  
+  o Pingo Notify dispara a mensagem.
+</Info>
+
+---
+
+## Sem WooCommerce
+
+Também funciona em qualquer site WordPress:
+
+- Institucionais  
+- Blogs  
+- Landing pages  
+
+Útil para alertas administrativos e eventos internos.
+
+---
+
+## Resumo
+
+<Info>
+  - O plugin faz a integração  
+  - O Pingo Notify faz o envio  
+  - Você pode começar com um plano gratuito
+</Info>
+
+Com os dois configurados, seu site envia notificações automaticamente.

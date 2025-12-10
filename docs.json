@@ -23,7 +23,22 @@
                   {
                     "group": "Getting Started",
                     "pages": [
-                      "en/index"
+                      "en/index",
+                      "en/plugins"
+                    ]
+                  },
+                  {
+                    "group": "Features",
+                    "pages": [
+                      "en/connections",
+                      "en/integrations",
+                      "en/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Authentication",
+                    "pages": [
+                      "en/apikeys"
                     ]
                   }
                 ]
@@ -86,7 +101,22 @@
                   {
                     "group": "Começando",
                     "pages": [
-                      "pt-BR/index"
+                      "pt-BR/index",
+                      "pt-BR/plugins"
+                    ]
+                  },
+                  {
+                    "group": "Recursos",
+                    "pages": [
+                      "pt-BR/connections",
+                      "pt-BR/integrations",
+                      "pt-BR/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Autenticação",
+                    "pages": [
+                      "pt-BR/apikeys"
                     ]
                   }
                 ]

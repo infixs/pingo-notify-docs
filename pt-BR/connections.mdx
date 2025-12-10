@@ -1,0 +1,146 @@
+---
+title: Conexões
+description: Conexões representam sessões do WhatsApp vinculadas ao Pingo Notify, usadas para envio, recebimento e integrações.
+icon: qrcode
+---
+
+## O que é uma conexão?
+
+Uma **conexão** é uma **sessão ativa do WhatsApp** vinculada ao Pingo Notify, semelhante ao WhatsApp Web.
+
+<Info>
+  É uma sessão escaneada por QR Code,  
+  porém **nomeada**, **gerenciável** e com **controles avançados**.
+</Info>
+
+Cada conexão corresponde a um WhatsApp conectado.
+
+---
+
+## Para que servem?
+
+As conexões são a base de tudo no Pingo Notify.  
+Elas permitem:
+
+- Enviar e receber mensagens  
+- Processar eventos  
+- Usar plugins, webhooks e APIs  
+- Controlar o comportamento da sessão  
+
+Sem uma conexão ativa, nenhuma integração funciona.
+
+---
+
+## O que posso fazer com uma conexão?
+
+- Vincular um WhatsApp via QR Code  
+- Nomear a sessão  
+- Usar a mesma conexão em múltiplas integrações  
+- Configurar webhooks  
+- Ajustar regras de leitura, presença e chamadas  
+
+Cada conexão é independente.
+
+---
+
+## Editar conexão
+
+A tela **Editar conexão** define **como a sessão do WhatsApp se comporta**.
+
+<Info>
+  As alterações afetam apenas a conexão selecionada.
+</Info>
+
+### Nome da conexão
+
+Nome interno para identificação.
+
+- Apenas organizacional  
+- Não altera o WhatsApp  
+
+**Exemplos:** `Suporte`, `Vendas`, `Financeiro`
+
+---
+
+## Configurações da conexão
+
+Essas opções controlam o comportamento da sessão conectada.
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+  <Card icon="check-double">
+    <h3>Ler mensagens recebidas</h3>
+    <p>Marca mensagens como lidas automaticamente.</p>
+    <ul>
+      <li>Ativo: leitura imediata</li>
+      <li>Inativo: leitura manual</li>
+    </ul>
+  </Card>
+
+  <Card icon="circle-dot">
+    <h3>Sempre online</h3>
+    <p>Mantém a sessão ativa e aparecendo como online.</p>
+    <ul>
+      <li>Indicado para bots</li>
+      <li>Evite em atendimento humano</li>
+    </ul>
+  </Card>
+
+  <Card icon="users-slash">
+    <h3>Ignorar mensagens de grupos</h3>
+    <p>Não processa mensagens vindas de grupos.</p>
+    <ul>
+      <li>Eventos ignorados</li>
+      <li>Webhooks não recebem</li>
+    </ul>
+  </Card>
+
+  <Card icon="clock-rotate-left">
+    <h3>Sincronizar histórico completo</h3>
+    <p>Importa conversas antigas ao conectar.</p>
+    <ul>
+      <li>Ative se precisar de histórico</li>
+      <li>Desative para iniciar do zero</li>
+    </ul>
+  </Card>
+
+  <Card icon="phone-slash">
+    <h3>Rejeitar chamadas</h3>
+    <p>Rejeita automaticamente ligações.</p>
+    <ul>
+      <li>Canal focado em mensagens</li>
+    </ul>
+  </Card>
+
+  <Card icon="eye-slash">
+    <h3>Ler atualizações de status</h3>
+    <p>Marca status como visualizados.</p>
+    <ul>
+      <li>Evita acúmulo de status</li>
+      <li>Opcional para privacidade</li>
+    </ul>
+  </Card>
+
+</div>
+
+---
+
+## Importante saber
+
+<Callout icon="circle-info">
+- Conexão = sessão do WhatsApp  
+- Cada conexão tem suas próprias regras  
+- Integrações sempre usam uma conexão ativa  
+</Callout>
+
+---
+
+## Resumo
+
+<Info>
+  - Funciona como um WhatsApp Web gerenciado  
+  - É a base para mensagens e integrações  
+  - Revisar as configurações evita problemas  
+</Info>
+
+Antes de usar plugins, webhooks ou APIs, configure corretamente sua conexão.
