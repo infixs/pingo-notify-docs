@@ -11,6 +11,69 @@
   "navigation": {
     "languages": [
       {
+        "language": "en",
+        "versions": [
+          {
+            "version": "v2",
+            "tabs": [
+              {
+                "tab": "Documentation",
+                "icon": "book",
+                "groups": [
+                  {
+                    "group": "Getting Started",
+                    "pages": [
+                      "en/index"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tab": "API Reference",
+                "icon": "signs-post",
+                "groups": [
+                  {
+                    "group": "API Documentation",
+                    "pages": [
+                      "en/api-reference/v2/index",
+                      "en/api-reference/v2/authentication",
+                      "en/api-reference/v2/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Connections",
+                    "pages": [
+                      "en/api-reference/v2/endpoints/connections/qr-code",
+                      "en/api-reference/v2/endpoints/connections/paginate",
+                      "en/api-reference/v2/endpoints/connections/create",
+                      "en/api-reference/v2/endpoints/connections/update",
+                      "en/api-reference/v2/endpoints/connections/delete",
+                      "en/api-reference/v2/endpoints/connections/logout"
+                    ]
+                  },
+                  {
+                    "group": "Chats",
+                    "pages": [
+                      "en/api-reference/v2/endpoints/chats/fetch",
+                      "en/api-reference/v2/endpoints/chats/presence"
+                    ]
+                  },
+                  {
+                    "group": "Messages",
+                    "pages": [
+                      "en/api-reference/v2/endpoints/messages/paginate",
+                      "en/api-reference/v2/endpoints/messages/download",
+                      "en/api-reference/v2/endpoints/messages/sent-message",
+                      "en/api-reference/v2/endpoints/messages/sent-sticker"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
         "language": "pt-BR",
         "versions": [
           {
@@ -62,9 +125,9 @@
                     "group": "Mensagens",
                     "pages": [
                       "pt-BR/api-reference/v2/endpoints/messages/paginate",
+                      "pt-BR/api-reference/v2/endpoints/messages/download",
                       "pt-BR/api-reference/v2/endpoints/messages/sent-message",
-                      "pt-BR/api-reference/v2/endpoints/messages/sent-sticker",
-                      "pt-BR/api-reference/v2/endpoints/messages/download"
+                      "pt-BR/api-reference/v2/endpoints/messages/sent-sticker"
                     ]
                   }
                 ]

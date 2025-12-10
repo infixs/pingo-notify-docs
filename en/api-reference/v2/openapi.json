@@ -22,7 +22,7 @@
         "tags": [
           "Connections"
         ],
-        "summary": "Pagination",
+        "summary": "Message Pagination",
         "operationId": "Connections_Chats_Messages_Pagination",
         "parameters": [
           {
@@ -62,15 +62,15 @@
         ],
         "responses": {
           "200": {
-            "description": "Paginação de mensagens",
+            "description": "Message Pagination",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginationMessagesResponse"
                 },
                 "examples": {
-                  "Paginação de mensagens": {
-                    "summary": "Paginação de mensagens",
+                  "Messages Pagination": {
+                    "summary": "Message Pagination",
                     "value": {
                       "data": [
                         {
@@ -106,22 +106,22 @@
             "$ref": "#/components/responses/UnauthorizedErrors"
           },
           "404": {
-            "description": "Conexão ou número não encontrado",
+            "description": "Connection or number not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "Conexão não encontrada": {
-                    "summary": "Conexão não encontrada",
+                  "Connection not found": {
+                    "summary": "Connection not found",
                     "value": {
                       "message": "CONNECTION_NOT_FOUND",
                       "hint": "Connection not found."
                     }
                   },
-                  "Número não encontrado": {
-                    "summary": "Número não encontrado",
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
                     "value": {
                       "message": "PHONE_NUMBER_NOT_FOUND",
                       "hint": "Phone number not found."
@@ -181,14 +181,14 @@
         },
         "responses": {
           "201": {
-            "description": "Mensagem enviada",
+            "description": "Message sent",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SendMessageResponse"
                 },
                 "examples": {
-                  "Mensagem enviada": {
+                  "Message sent": {
                     "value": {
                       "id": "019af014-b45d-7f40-b542-b89b15906ac9",
                       "connectionId": "019af012-196b-7082-9787-2611fc9056d2",
@@ -226,22 +226,22 @@
             "$ref": "#/components/responses/UnauthorizedErrors"
           },
           "404": {
-            "description": "Conexão ou número não encontrado",
+            "description": "Connection or number not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "Conexão não encontrada": {
-                    "summary": "Conexão não encontrada",
+                  "Connection not found": {
+                    "summary": "Connection not found",
                     "value": {
                       "message": "CONNECTION_NOT_FOUND",
                       "hint": "Connection not found."
                     }
                   },
-                  "Número não encontrado": {
-                    "summary": "Número não encontrado",
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
                     "value": {
                       "message": "PHONE_NUMBER_NOT_EXISTS",
                       "hint": "The phone number does not exist."
@@ -302,7 +302,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Mensagem não encontrada",
+            "description": "Message not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -361,15 +361,15 @@
         },
         "responses": {
           "201": {
-            "description": "Figurinha enviada",
+            "description": "Sticker sent",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object"
                 },
                 "examples": {
-                  "Figurinha enviada": {
-                    "summary": "Figurinha enviada",
+                  "Sticker sent": {
+                    "summary": "Sticker sent",
                     "value": {
                       "id": "019af015-373a-7192-a581-ce3449b76268",
                       "connectionId": "019af012-196b-7082-9787-2611fc9056d2",
@@ -403,22 +403,22 @@
             "$ref": "#/components/responses/UnauthorizedErrors"
           },
           "404": {
-            "description": "Conexão ou número não encontrado",
+            "description": "Connection or number not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "Conexão não encontrada": {
-                    "summary": "Conexão não encontrada",
+                  "Connection not found": {
+                    "summary": "Connection not found",
                     "value": {
                       "message": "CONNECTION_NOT_FOUND",
                       "hint": "Connection not found."
                     }
                   },
-                  "Número não encontrado": {
-                    "summary": "Número não encontrado",
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
                     "value": {
                       "message": "PHONE_NUMBER_NOT_EXISTS",
                       "hint": "The phone number does not exist."
@@ -453,7 +453,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Bate-papos buscados",
+            "description": "Chats",
             "content": {
               "application/json": {
                 "schema": {
@@ -500,7 +500,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Conexão não encontrada",
+            "description": "Connection not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -559,28 +559,28 @@
         },
         "responses": {
           "204": {
-            "description": "A confirmação ocorre apenas pelo código de status HTTP."
+            "description": "Confirmation occurs solely via the HTTP status code."
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedErrors"
           },
           "404": {
-            "description": "Conexão ou número não encontrado",
+            "description": "Connection or number not found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "Conexão não encontrada": {
-                    "summary": "Conexão não encontrada",
+                  "Connection not found": {
+                    "summary": "Connection not found",
                     "value": {
                       "message": "CONNECTION_NOT_FOUND",
                       "hint": "Connection not found."
                     }
                   },
-                  "Número não encontrado": {
-                    "summary": "Número não encontrado",
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
                     "value": {
                       "message": "PHONE_NUMBER_NOT_EXISTS",
                       "hint": "The phone number does not exist."
@@ -672,7 +672,7 @@
         "tags": [
           "Connections"
         ],
-        "summary": "Lista de conexões paginadas",
+        "summary": "Paginated connections list",
         "operationId": "Connections_Pagination",
         "parameters": [
           {
@@ -696,7 +696,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Lista de conexões paginadas",
+            "description": "Paginated connections list",
             "content": {
               "application/json": {
                 "schema": {
@@ -775,7 +775,7 @@
         },
         "responses": {
           "201": {
-            "description": "Conexão criada com sucesso",
+            "description": "Connection created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -801,7 +801,7 @@
             }
           },
           "400": {
-            "description": "Requisição inválida",
+            "description": "Invalid request",
             "content": {
               "application/json": {
                 "schema": {
@@ -867,7 +867,7 @@
         },
         "responses": {
           "200": {
-            "description": "Atualização bem-sucedida",
+            "description": "Connection updated successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -902,7 +902,7 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Conexão não encontrada",
+            "description": "Connection not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -938,13 +938,13 @@
         ],
         "responses": {
           "204": {
-            "description": "A confirmação ocorre apenas pelo código de status HTTP."
+            "description": "Confirmation occurs solely via the HTTP status code."
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Conexão não encontrada",
+            "description": "Connection not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -982,13 +982,13 @@
         ],
         "responses": {
           "204": {
-            "description": "A confirmação ocorre apenas pelo código de status HTTP."
+            "description": "Confirmation occurs solely via the HTTP status code."
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Conexão não encontrada",
+            "description": "Connection not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1979,14 +1979,14 @@
           },
           "hint": {
             "type": "string",
-            "description": "O campo hint é definido com base na linguagem do último login. Se o usuário não estiver autenticado, utiliza o valor do Accept-Language."
+            "description": "The hint field is defined based on the language of the last login. If the user is not authenticated, the Accept-Language value is used."
           }
         }
       }
     },
     "responses": {
       "UnauthorizedError": {
-        "description": "Não autorizado",
+        "description": "Unauthorized",
         "content": {
           "application/json": {
             "schema": {
@@ -2000,14 +2000,14 @@
         }
       },
       "UnauthorizedErrors": {
-        "description": "Não autorizado",
+        "description": "Unauthorized",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ErrorResponse"
             },
             "examples": {
-              "Não autorizado": {
+              "Unauthorized": {
                 "value": {
                   "message": "UNAUTHORIZED",
                   "hint": "The provided credentials are invalid or have expired. Please log in again."
@@ -2018,7 +2018,7 @@
         }
       },
       "InternalServerError": {
-        "description": "Erro inesperado",
+        "description": "Unexpected error",
         "content": {
           "application/json": {
             "schema": {
@@ -2032,14 +2032,14 @@
         }
       },
       "InternalServerErrors": {
-        "description": "Erro inesperado",
+        "description": "Unexpected error",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ErrorResponse"
             },
             "examples": {
-              "Erro inesperado": {
+              "Unexpected error": {
                 "value": {
                   "message": "UNEXPECTED_ERROR",
                   "hint": "An unexpected error occurred. Please try again later."
