@@ -1151,7 +1151,16 @@
         ],
         "summary": "Check WhatsApp",
         "operationId": "Check_WhatsApp",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "$ref": "#/components/requestBodies/CheckWhatsappRequest"
         },
