@@ -69,7 +69,8 @@
                       "en/api-reference/v2/endpoints/connections/create",
                       "en/api-reference/v2/endpoints/connections/update",
                       "en/api-reference/v2/endpoints/connections/delete",
-                      "en/api-reference/v2/endpoints/connections/logout"
+                      "en/api-reference/v2/endpoints/connections/logout",
+                      "en/api-reference/v2/endpoints/connections/check-whatsapp"
                     ]
                   },
                   {
@@ -87,6 +88,10 @@
                       "en/api-reference/v2/endpoints/messages/sent-message",
                       "en/api-reference/v2/endpoints/messages/sent-sticker"
                     ]
+                  },
+                  {
+                    "group": "Verifications",
+                    "pages": ["en/api-reference/v2/endpoints/check/whatsapp"]
                   }
                 ]
               }
@@ -153,7 +158,8 @@
                       "pt-BR/api-reference/v2/endpoints/connections/create",
                       "pt-BR/api-reference/v2/endpoints/connections/update",
                       "pt-BR/api-reference/v2/endpoints/connections/delete",
-                      "pt-BR/api-reference/v2/endpoints/connections/logout"
+                      "pt-BR/api-reference/v2/endpoints/connections/logout",
+                      "pt-BR/api-reference/v2/endpoints/connections/check-whatsapp"
                     ]
                   },
                   {
@@ -171,6 +177,10 @@
                       "pt-BR/api-reference/v2/endpoints/messages/sent-message",
                       "pt-BR/api-reference/v2/endpoints/messages/sent-sticker"
                     ]
+                  },
+                  {
+                    "group": "Verificações",
+                    "pages": ["pt-BR/api-reference/v2/endpoints/check/whatsapp"]
                   }
                 ]
               }

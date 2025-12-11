@@ -1142,6 +1142,57 @@
           }
         }
       }
+    },
+    "/v2/connections/{id}/check/whatsapp": {
+      "post": {
+        "tags": [
+          "Verifications",
+          "Check"
+        ],
+        "summary": "Check WhatsApp",
+        "operationId": "Check_WhatsApp",
+        "parameters": [],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CheckWhatsappRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CheckWhatsappSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/CheckWhatsappBadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/v2/check/whatsapp": {
+      "post": {
+        "tags": [
+          "Verifications",
+          "Check"
+        ],
+        "summary": "Check WhatsApp",
+        "operationId": "Check_WhatsApp",
+        "parameters": [],
+        "security": [],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CheckWhatsappRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CheckWhatsappSuccess"
+          },
+          "400": {
+            "$ref": "#/components/responses/CheckWhatsappBadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2120,6 +2171,34 @@
         }
       }
     },
+    "requestBodies": {
+      "CheckWhatsappRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "numbers"
+              ],
+              "properties": {
+                "numbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "example": {
+              "numbers": [
+                "+559999999999",
+                "+559888888888"
+              ]
+            }
+          }
+        }
+      }
+    },
     "responses": {
       "UnauthorizedError": {
         "description": "Não autorizado",
@@ -2181,6 +2260,81 @@
                   "hint": "An unexpected error occurred. Please try again later."
                 }
               }
+            }
+          }
+        }
+      },
+      "CheckWhatsappBadRequest": {
+        "description": "Requisição inválida",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "error": {
+                  "type": "string"
+                },
+                "statusCode": {
+                  "type": "integer"
+                }
+              }
+            },
+            "example": {
+              "message": [
+                "each value in numbers must be a string",
+                "numbers must contain no more than 50 elements",
+                "numbers must contain at least 1 elements",
+                "numbers must be an array"
+              ],
+              "error": "Bad Request",
+              "statusCode": 400
+            }
+          }
+        }
+      },
+      "CheckWhatsappSuccess": {
+        "description": "Informações de números do WhatsApp",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "jid": {
+                  "type": "string",
+                  "description": "JID do WhatsApp"
+                },
+                "exists": {
+                  "type": "boolean",
+                  "description": "Indica se o número existe no WhatsApp"
+                },
+                "number": {
+                  "type": "string",
+                  "description": "Número de telefone verificado"
+                },
+                "lid": {
+                  "type": "string",
+                  "description": "LID do WhatsApp, se disponível"
+                }
+              },
+              "example": [
+                {
+                  "jid": "559999999999@s.whatsapp.net",
+                  "exists": true,
+                  "number": "+9999999999"
+                },
+                {
+                  "jid": "559999999999@s.whatsapp.net",
+                  "exists": true,
+                  "number": "+559999999999",
+                  "lid": "559999999999@s.whatsapp.net"
+                }
+              ]
             }
           }
         }
