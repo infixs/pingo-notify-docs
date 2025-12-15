@@ -1247,7 +1247,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Nome de exibição do usuário no WhatsApp. Pode ser `null` caso o contato não tenha um nome definido ou uma string vazia se o nome não estiver disponível."
           },
           "messageType": {
             "type": "string",
@@ -1367,7 +1368,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Nome de exibição do usuário no WhatsApp. Pode ser `null` caso o contato não tenha um nome definido ou uma string vazia se o nome não estiver disponível."
           },
           "messageType": {
             "type": "string",
@@ -1561,7 +1563,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Nome de exibição do usuário no WhatsApp. Pode ser `null` caso o contato não tenha um nome definido ou uma string vazia se o nome não estiver disponível."
           },
           "messageType": {
             "type": "string",
@@ -1654,7 +1657,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Nome de exibição do usuário no WhatsApp. Pode ser `null` caso o contato não tenha um nome definido ou uma string vazia se o nome não estiver disponível."
           },
           "profilePicUrl": {
             "type": "string",
@@ -1697,7 +1701,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Nome de exibição do usuário no WhatsApp. Pode ser `null` caso o contato não tenha um nome definido ou uma string vazia se o nome não estiver disponível."
           },
           "participant": {
             "type": "string",

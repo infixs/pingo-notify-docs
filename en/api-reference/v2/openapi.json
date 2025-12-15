@@ -1247,7 +1247,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Display name of the WhatsApp user. May be `null` if the contact has no defined name, or an empty string if the name is not available."
           },
           "messageType": {
             "type": "string",
@@ -1367,7 +1368,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Display name of the WhatsApp user. May be `null` if the contact has no defined name, or an empty string if the name is not available."
           },
           "messageType": {
             "type": "string",
@@ -1561,7 +1563,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Display name of the WhatsApp user. May be `null` if the contact has no defined name, or an empty string if the name is not available."
           },
           "messageType": {
             "type": "string",
@@ -1654,7 +1657,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Display name of the WhatsApp user. May be `null` if the contact has no defined name, or an empty string if the name is not available."
           },
           "profilePicUrl": {
             "type": "string",
@@ -1697,7 +1701,8 @@
           },
           "pushName": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "description": "Display name of the WhatsApp user. May be `null` if the contact has no defined name, or an empty string if the name is not available."
           },
           "participant": {
             "type": "string",
