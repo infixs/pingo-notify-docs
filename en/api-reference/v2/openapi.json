@@ -744,7 +744,7 @@
         "tags": [
           "Connections"
         ],
-        "summary": "Paginated connections list",
+        "summary": "Connections list",
         "operationId": "Connections_Pagination",
         "parameters": [
           {
@@ -765,7 +765,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Paginated connections list",
+            "description": "Connections list",
             "content": {
               "application/json": {
                 "schema": {
