@@ -748,22 +748,19 @@
         "operationId": "Connections_Pagination",
         "parameters": [
           {
-            "name": "page",
+            "name": "status",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "created",
+                "open",
+                "connecting",
+                "close"
+              ]
             },
-            "example": "1"
-          },
-          {
-            "name": "per_page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "example": "2"
+            "example": "open"
           }
         ],
         "responses": {
