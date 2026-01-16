@@ -86,7 +86,10 @@
                       "en/api-reference/v2/endpoints/messages/paginate",
                       "en/api-reference/v2/endpoints/messages/download",
                       "en/api-reference/v2/endpoints/messages/sent-message",
-                      "en/api-reference/v2/endpoints/messages/sent-sticker"
+                      "en/api-reference/v2/endpoints/messages/sent-sticker",
+                      "en/api-reference/v2/endpoints/messages/send-template",
+                      "en/api-reference/v2/endpoints/messages/send-button",
+                      "en/api-reference/v2/endpoints/messages/send-list"
                     ]
                   },
                   {
@@ -175,7 +178,10 @@
                       "pt-BR/api-reference/v2/endpoints/messages/paginate",
                       "pt-BR/api-reference/v2/endpoints/messages/download",
                       "pt-BR/api-reference/v2/endpoints/messages/sent-message",
-                      "pt-BR/api-reference/v2/endpoints/messages/sent-sticker"
+                      "pt-BR/api-reference/v2/endpoints/messages/sent-sticker",
+                      "pt-BR/api-reference/v2/endpoints/messages/send-template",
+                      "pt-BR/api-reference/v2/endpoints/messages/send-button",
+                      "pt-BR/api-reference/v2/endpoints/messages/send-list"
                     ]
                   },
                   {

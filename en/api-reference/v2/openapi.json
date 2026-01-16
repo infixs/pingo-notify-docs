@@ -166,6 +166,12 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "linkPreview": {
+                    "type": "boolean"
+                  },
                   "mediaData": {
                     "type": "object",
                     "properties": {
@@ -266,6 +272,891 @@
           },
           "404": {
             "description": "Connection or number not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Connection not found": {
+                    "summary": "Connection not found",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
+                    "value": {
+                      "message": "PHONE_NUMBER_NOT_EXISTS",
+                      "hint": "The phone number does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrors"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/send-template": {
+      "post": {
+        "summary": "Send template message",
+        "operationId": "sendTemplateMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Connection ID"
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "WhatsApp contact JID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "language"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Template name"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Template language (e.g. pt_BR, en_US)"
+                  },
+                  "components": {
+                    "type": "array",
+                    "nullable": true,
+                    "description": "Template components",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "type"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "body",
+                            "button"
+                          ],
+                          "description": "Component type"
+                        },
+                        "subType": {
+                          "type": "string",
+                          "enum": [
+                            "url",
+                            "quick_reply"
+                          ],
+                          "nullable": true,
+                          "description": "Button subtype"
+                        },
+                        "index": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2,
+                          "nullable": true,
+                          "description": "Button index"
+                        },
+                        "parameters": {
+                          "type": "array",
+                          "nullable": true,
+                          "description": "Component parameters",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "type",
+                              "text"
+                            ],
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "text"
+                                ],
+                                "description": "Parameter type"
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "Parameter text"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "name": "example_template",
+                    "language": "en_US",
+                    "components": [
+                      {
+                        "type": "body",
+                        "parameters": [
+                          {
+                            "type": "text",
+                            "text": "Hello!"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "subType": "url",
+                        "index": 0,
+                        "parameters": [
+                          {
+                            "type": "text",
+                            "text": "https://example.com"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Template message sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "message",
+                    "messageType",
+                    "messageTimestamp",
+                    "instanceId",
+                    "status",
+                    "source"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "fromMe",
+                        "id",
+                        "remoteJid"
+                      ],
+                      "properties": {
+                        "fromMe": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "wamid.HBgMNTU..."
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "99999999999@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "conversation"
+                      ],
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "example": "▶️teste_evolutionv2◀️"
+                        }
+                      }
+                    },
+                    "messageType": {
+                      "type": "string",
+                      "example": "conversation"
+                    },
+                    "messageTimestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 1768569655
+                    },
+                    "instanceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "unknown"
+                    }
+                  },
+                  "example": {
+                    "key": {
+                      "fromMe": true,
+                      "id": "wamid.HBgMNTU...",
+                      "remoteJid": "99999999999@s.whatsapp.net"
+                    },
+                    "message": {
+                      "conversation": "▶️teste_evolutionv2◀️"
+                    },
+                    "messageType": "conversation",
+                    "messageTimestamp": 1768569655,
+                    "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647",
+                    "status": "PENDING",
+                    "source": "unknown"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrors"
+          },
+          "404": {
+            "description": "Connection or phone number not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Connection not found": {
+                    "summary": "Connection not found",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
+                    "value": {
+                      "message": "PHONE_NUMBER_NOT_EXISTS",
+                      "hint": "The phone number does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrors"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/send-list": {
+      "post": {
+        "summary": "Send list message",
+        "operationId": "sendListMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Connection ID"
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "WhatsApp contact JID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "description",
+                  "buttonText",
+                  "sections"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "List title"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "List description"
+                  },
+                  "buttonText": {
+                    "type": "string",
+                    "description": "Button text that opens the list"
+                  },
+                  "footerText": {
+                    "type": "string",
+                    "description": "Footer text",
+                    "nullable": true
+                  },
+                  "sections": {
+                    "type": "array",
+                    "description": "List sections",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "title",
+                        "rows"
+                      ],
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "Section title"
+                        },
+                        "rows": {
+                          "type": "array",
+                          "description": "Section rows",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "title",
+                              "description",
+                              "rowId"
+                            ],
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "description": "Item title"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Item description"
+                              },
+                              "rowId": {
+                                "type": "string",
+                                "description": "Item identifier"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Delay (ms) before sending",
+                    "nullable": true
+                  },
+                  "mentionsEveryOne": {
+                    "type": "boolean",
+                    "description": "Mention everyone",
+                    "nullable": true
+                  },
+                  "mentioned": {
+                    "type": "array",
+                    "description": "Mentioned JIDs",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "title": "List Title",
+                    "description": "Choose one option",
+                    "buttonText": "Open list",
+                    "footerText": "Footer text (optional)",
+                    "sections": [
+                      {
+                        "title": "Section 01",
+                        "rows": [
+                          {
+                            "title": "Row title 01",
+                            "description": "Title row 01",
+                            "rowId": "row_01"
+                          },
+                          {
+                            "title": "Row title 02",
+                            "description": "Title row 02",
+                            "rowId": "row_02"
+                          }
+                        ]
+                      }
+                    ],
+                    "delay": 1000,
+                    "mentionsEveryOne": false,
+                    "mentioned": [
+                      "99999999999@s.whatsapp.net"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "message",
+                    "messageType",
+                    "messageTimestamp",
+                    "instanceId",
+                    "status",
+                    "source"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "fromMe",
+                        "id",
+                        "remoteJid"
+                      ],
+                      "properties": {
+                        "fromMe": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "wamid.HBgMN..."
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "999999999999@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "conversation"
+                      ],
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "example": "List Title\nRow title 01\nTitle row 01\nTitle row 02\nRow title 02\nTitle row 01\nTitle row 02\n"
+                        }
+                      }
+                    },
+                    "messageType": {
+                      "type": "string",
+                      "example": "conversation"
+                    },
+                    "messageTimestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 1768569167
+                    },
+                    "instanceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "unknown"
+                    }
+                  },
+                  "example": {
+                    "key": {
+                      "fromMe": true,
+                      "id": "wamid.HBgMN...",
+                      "remoteJid": "999999999999@s.whatsapp.net"
+                    },
+                    "message": {
+                      "conversation": "List Title\nRow title 01\nTitle row 01\nTitle row 02\nRow title 02\nTitle row 01\nTitle row 02\n"
+                    },
+                    "messageType": "conversation",
+                    "messageTimestamp": 1768569167,
+                    "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647",
+                    "status": "PENDING",
+                    "source": "unknown"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrors"
+          },
+          "404": {
+            "description": "Connection or phone number not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Connection not found": {
+                    "summary": "Connection not found",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "Phone number not found": {
+                    "summary": "Phone number not found",
+                    "value": {
+                      "message": "PHONE_NUMBER_NOT_EXISTS",
+                      "hint": "The phone number does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrors"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/send-button": {
+      "post": {
+        "summary": "Send button message",
+        "operationId": "sendButtonMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Connection ID"
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "WhatsApp contact JID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "description",
+                  "footer",
+                  "buttons"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "footer": {
+                    "type": "string"
+                  },
+                  "buttons": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "type",
+                        "displayText"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "reply",
+                            "copy",
+                            "url",
+                            "call",
+                            "pix"
+                          ]
+                        },
+                        "displayText": {
+                          "type": "string"
+                        },
+                        "copyCode": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "phoneNumber": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "keyType": {
+                          "type": "string",
+                          "enum": [
+                            "phone",
+                            "email",
+                            "cpf",
+                            "cnpj",
+                            "random"
+                          ]
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "format": "int32",
+                    "nullable": true
+                  },
+                  "quoted": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": false,
+                    "required": [
+                      "key",
+                      "message"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "conversation"
+                        ],
+                        "properties": {
+                          "conversation": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mentionsEveryOne": {
+                    "type": "boolean",
+                    "nullable": true
+                  },
+                  "mentioned": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "title": "Title Button",
+                    "description": "Choose an option",
+                    "footer": "Footer",
+                    "buttons": [
+                      {
+                        "id": "btn_1",
+                        "type": "reply",
+                        "displayText": "Open and copy"
+                      },
+                      {
+                        "id": "btn_2",
+                        "type": "reply",
+                        "displayText": "Open and copy v2"
+                      }
+                    ],
+                    "delay": 1000,
+                    "mentionsEveryOne": false,
+                    "mentioned": [
+                      "99999999999@s.whatsapp.net"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Button message sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "message",
+                    "messageType",
+                    "messageTimestamp",
+                    "instanceId",
+                    "status",
+                    "source"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "fromMe",
+                        "id",
+                        "remoteJid"
+                      ],
+                      "properties": {
+                        "fromMe": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "wamid.HBgMNT..."
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "999999999999@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "conversation"
+                      ],
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "example": "Title Button\n▶️ Open and copy\n▶️ Open and copy v2\n"
+                        }
+                      }
+                    },
+                    "messageType": {
+                      "type": "string",
+                      "example": "conversation"
+                    },
+                    "messageTimestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 1768575356
+                    },
+                    "instanceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "unknown"
+                    }
+                  },
+                  "example": {
+                    "key": {
+                      "fromMe": true,
+                      "id": "wamid.HBgMNT...",
+                      "remoteJid": "999999999999@s.whatsapp.net"
+                    },
+                    "message": {
+                      "conversation": "Title Button\n▶️ Open and copy\n▶️ Open and copy v2\n"
+                    },
+                    "messageType": "conversation",
+                    "messageTimestamp": 1768575356,
+                    "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647",
+                    "status": "PENDING",
+                    "source": "unknown"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrors"
+          },
+          "404": {
+            "description": "Connection or phone number not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -829,13 +1720,30 @@
                 "type": "object",
                 "required": [
                   "name",
-                  "settings"
+                  "settings",
+                  "type"
                 ],
                 "properties": {
                   "name": {
                     "type": "string",
                     "minLength": 3,
                     "maxLength": 255
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WHATSAPP_UNOFFICIAL",
+                      "WHATSAPP_OFFICIAL"
+                    ]
+                  },
+                  "metaAccessToken": {
+                    "type": "string"
+                  },
+                  "metaPhoneNumberId": {
+                    "type": "string"
+                  },
+                  "metaBusinessAccountId": {
+                    "type": "string"
                   },
                   "settings": {
                     "type": "object",

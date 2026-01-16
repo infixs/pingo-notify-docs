@@ -166,6 +166,12 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "linkPreview": {
+                    "type": "boolean"
+                  },
                   "mediaData": {
                     "type": "object",
                     "properties": {
@@ -256,6 +262,891 @@
                       "createdAt": "2025-12-05T19:54:40.093Z",
                       "updatedAt": "2025-12-05T19:54:40.093Z"
                     }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrors"
+          },
+          "404": {
+            "description": "Conexão ou número não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Conexão não encontrada": {
+                    "summary": "Conexão não encontrada",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "Número não encontrado": {
+                    "summary": "Número não encontrado",
+                    "value": {
+                      "message": "PHONE_NUMBER_NOT_EXISTS",
+                      "hint": "The phone number does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrors"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/send-template": {
+      "post": {
+        "summary": "Enviar mensagem de template",
+        "operationId": "sendTemplateMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID da conexão"
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "JID do contato no WhatsApp"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "name",
+                  "language"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Nome do template"
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Idioma do template (ex: pt_BR, en_US)"
+                  },
+                  "components": {
+                    "type": "array",
+                    "nullable": true,
+                    "description": "Componentes do template",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "type"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "body",
+                            "button"
+                          ],
+                          "description": "Tipo do componente"
+                        },
+                        "subType": {
+                          "type": "string",
+                          "enum": [
+                            "url",
+                            "quick_reply"
+                          ],
+                          "nullable": true,
+                          "description": "Subtipo do botão"
+                        },
+                        "index": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 2,
+                          "nullable": true,
+                          "description": "Índice do botão"
+                        },
+                        "parameters": {
+                          "type": "array",
+                          "nullable": true,
+                          "description": "Parâmetros do componente",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "type",
+                              "text"
+                            ],
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "text"
+                                ],
+                                "description": "Tipo do parâmetro"
+                              },
+                              "text": {
+                                "type": "string",
+                                "minLength": 1,
+                                "description": "Texto do parâmetro"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "name": "example_template",
+                    "language": "pt_BR",
+                    "components": [
+                      {
+                        "type": "body",
+                        "parameters": [
+                          {
+                            "type": "text",
+                            "text": "Olá!"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "button",
+                        "subType": "url",
+                        "index": 0,
+                        "parameters": [
+                          {
+                            "type": "text",
+                            "text": "https://exemplo.com"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem de template enviada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "message",
+                    "messageType",
+                    "messageTimestamp",
+                    "instanceId",
+                    "status",
+                    "source"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "fromMe",
+                        "id",
+                        "remoteJid"
+                      ],
+                      "properties": {
+                        "fromMe": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "wamid.HBgMNTU..."
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "99999999999@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "conversation"
+                      ],
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "example": "▶️teste_evolutionv2◀️"
+                        }
+                      }
+                    },
+                    "messageType": {
+                      "type": "string",
+                      "example": "conversation"
+                    },
+                    "messageTimestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 1768569655
+                    },
+                    "instanceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "unknown"
+                    }
+                  },
+                  "example": {
+                    "key": {
+                      "fromMe": true,
+                      "id": "wamid.HBgMNTU...",
+                      "remoteJid": "99999999999@s.whatsapp.net"
+                    },
+                    "message": {
+                      "conversation": "▶️teste_evolutionv2◀️"
+                    },
+                    "messageType": "conversation",
+                    "messageTimestamp": 1768569655,
+                    "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647",
+                    "status": "PENDING",
+                    "source": "unknown"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrors"
+          },
+          "404": {
+            "description": "Conexão ou número não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Conexão não encontrada": {
+                    "summary": "Conexão não encontrada",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "Número não encontrado": {
+                    "summary": "Número não encontrado",
+                    "value": {
+                      "message": "PHONE_NUMBER_NOT_EXISTS",
+                      "hint": "The phone number does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrors"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/send-list": {
+      "post": {
+        "summary": "Enviar lista de mensagem",
+        "operationId": "sendListMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID da conexão"
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "JID do contato no WhatsApp"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "description",
+                  "buttonText",
+                  "sections"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Título da lista"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da lista"
+                  },
+                  "buttonText": {
+                    "type": "string",
+                    "description": "Texto do botão que abre a lista"
+                  },
+                  "footerText": {
+                    "type": "string",
+                    "description": "Texto do rodapé",
+                    "nullable": true
+                  },
+                  "sections": {
+                    "type": "array",
+                    "description": "Seções da lista",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "title",
+                        "rows"
+                      ],
+                      "properties": {
+                        "title": {
+                          "type": "string",
+                          "description": "Título da seção"
+                        },
+                        "rows": {
+                          "type": "array",
+                          "description": "Linhas da seção",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "title",
+                              "description",
+                              "rowId"
+                            ],
+                            "properties": {
+                              "title": {
+                                "type": "string",
+                                "description": "Título do item"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Descrição do item"
+                              },
+                              "rowId": {
+                                "type": "string",
+                                "description": "Identificador do item"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "Delay (ms) antes do envio",
+                    "nullable": true
+                  },
+                  "mentionsEveryOne": {
+                    "type": "boolean",
+                    "description": "Mencionar todos",
+                    "nullable": true
+                  },
+                  "mentioned": {
+                    "type": "array",
+                    "description": "Lista de JIDs mencionados",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "title": "List Title",
+                    "description": "Choose one option",
+                    "buttonText": "Open list",
+                    "footerText": "Footer text (optional)",
+                    "sections": [
+                      {
+                        "title": "Section 01",
+                        "rows": [
+                          {
+                            "title": "Row title 01",
+                            "description": "Title row 01",
+                            "rowId": "row_01"
+                          },
+                          {
+                            "title": "Row title 02",
+                            "description": "Title row 02",
+                            "rowId": "row_02"
+                          }
+                        ]
+                      }
+                    ],
+                    "delay": 1000,
+                    "mentionsEveryOne": false,
+                    "mentioned": [
+                      "99999999999@s.whatsapp.net"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Lista enviada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "message",
+                    "messageType",
+                    "messageTimestamp",
+                    "instanceId",
+                    "status",
+                    "source"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "fromMe",
+                        "id",
+                        "remoteJid"
+                      ],
+                      "properties": {
+                        "fromMe": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "wamid.HBgMN..."
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "999999999999@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "conversation"
+                      ],
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "example": "List Title\nRow title 01\nTitle row 01\nTitle row 02\nRow title 02\nTitle row 01\nTitle row 02\n"
+                        }
+                      }
+                    },
+                    "messageType": {
+                      "type": "string",
+                      "example": "conversation"
+                    },
+                    "messageTimestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 1768569167
+                    },
+                    "instanceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "unknown"
+                    }
+                  },
+                  "example": {
+                    "key": {
+                      "fromMe": true,
+                      "id": "wamid.HBgMN...",
+                      "remoteJid": "999999999999@s.whatsapp.net"
+                    },
+                    "message": {
+                      "conversation": "List Title\nRow title 01\nTitle row 01\nTitle row 02\nRow title 02\nTitle row 01\nTitle row 02\n"
+                    },
+                    "messageType": "conversation",
+                    "messageTimestamp": 1768569167,
+                    "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647",
+                    "status": "PENDING",
+                    "source": "unknown"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedErrors"
+          },
+          "404": {
+            "description": "Conexão ou número não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "Conexão não encontrada": {
+                    "summary": "Conexão não encontrada",
+                    "value": {
+                      "message": "CONNECTION_NOT_FOUND",
+                      "hint": "Connection not found."
+                    }
+                  },
+                  "Número não encontrado": {
+                    "summary": "Número não encontrado",
+                    "value": {
+                      "message": "PHONE_NUMBER_NOT_EXISTS",
+                      "hint": "The phone number does not exist."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerErrors"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/chats/{remoteJid}/messages/send-button": {
+      "post": {
+        "summary": "Enviar mensagem com botões",
+        "operationId": "sendButtonMessage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID da conexão"
+          },
+          {
+            "name": "remoteJid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "JID do contato no WhatsApp"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "title",
+                  "description",
+                  "footer",
+                  "buttons"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "footer": {
+                    "type": "string"
+                  },
+                  "buttons": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "type",
+                        "displayText"
+                      ],
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "reply",
+                            "copy",
+                            "url",
+                            "call",
+                            "pix"
+                          ]
+                        },
+                        "displayText": {
+                          "type": "string"
+                        },
+                        "copyCode": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "phoneNumber": {
+                          "type": "string"
+                        },
+                        "currency": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "keyType": {
+                          "type": "string",
+                          "enum": [
+                            "phone",
+                            "email",
+                            "cpf",
+                            "cnpj",
+                            "random"
+                          ]
+                        },
+                        "key": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "delay": {
+                    "type": "integer",
+                    "format": "int32",
+                    "nullable": true
+                  },
+                  "quoted": {
+                    "type": "object",
+                    "nullable": true,
+                    "additionalProperties": false,
+                    "required": [
+                      "key",
+                      "message"
+                    ],
+                    "properties": {
+                      "key": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "message": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "conversation"
+                        ],
+                        "properties": {
+                          "conversation": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "mentionsEveryOne": {
+                    "type": "boolean",
+                    "nullable": true
+                  },
+                  "mentioned": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "title": "Title Button",
+                    "description": "Escolha uma opção",
+                    "footer": "Rodapé",
+                    "buttons": [
+                      {
+                        "id": "btn_1",
+                        "type": "reply",
+                        "displayText": "Abrir e copiar"
+                      },
+                      {
+                        "id": "btn_2",
+                        "type": "reply",
+                        "displayText": "Abrir e copiar v2"
+                      }
+                    ],
+                    "delay": 1000,
+                    "mentionsEveryOne": false,
+                    "mentioned": [
+                      "99999999999@s.whatsapp.net"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensagem com botões enviada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "key",
+                    "message",
+                    "messageType",
+                    "messageTimestamp",
+                    "instanceId",
+                    "status",
+                    "source"
+                  ],
+                  "properties": {
+                    "key": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "fromMe",
+                        "id",
+                        "remoteJid"
+                      ],
+                      "properties": {
+                        "fromMe": {
+                          "type": "boolean",
+                          "example": true
+                        },
+                        "id": {
+                          "type": "string",
+                          "example": "wamid.HBgMNT..."
+                        },
+                        "remoteJid": {
+                          "type": "string",
+                          "example": "999999999999@s.whatsapp.net"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "conversation"
+                      ],
+                      "properties": {
+                        "conversation": {
+                          "type": "string",
+                          "example": "Title Button\n▶️ Abrir e copiar\n▶️ Abrir e copiar v2\n"
+                        }
+                      }
+                    },
+                    "messageType": {
+                      "type": "string",
+                      "example": "conversation"
+                    },
+                    "messageTimestamp": {
+                      "type": "integer",
+                      "format": "int64",
+                      "example": 1768575356
+                    },
+                    "instanceId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "PENDING"
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "unknown"
+                    }
+                  },
+                  "example": {
+                    "key": {
+                      "fromMe": true,
+                      "id": "wamid.HBgMNT...",
+                      "remoteJid": "999999999999@s.whatsapp.net"
+                    },
+                    "message": {
+                      "conversation": "Title Button\n▶️ Abrir e copiar\n▶️ Abrir e copiar v2\n"
+                    },
+                    "messageType": "conversation",
+                    "messageTimestamp": 1768575356,
+                    "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647",
+                    "status": "PENDING",
+                    "source": "unknown"
                   }
                 }
               }
@@ -829,13 +1720,30 @@
                 "type": "object",
                 "required": [
                   "name",
-                  "settings"
+                  "settings",
+                  "type"
                 ],
                 "properties": {
                   "name": {
                     "type": "string",
                     "minLength": 3,
                     "maxLength": 255
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "WHATSAPP_UNOFFICIAL",
+                      "WHATSAPP_OFFICIAL"
+                    ]
+                  },
+                  "metaAccessToken": {
+                    "type": "string"
+                  },
+                  "metaPhoneNumberId": {
+                    "type": "string"
+                  },
+                  "metaBusinessAccountId": {
+                    "type": "string"
                   },
                   "settings": {
                     "type": "object",
