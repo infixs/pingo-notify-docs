@@ -499,7 +499,7 @@
                       "properties": {
                         "conversation": {
                           "type": "string",
-                          "example": "▶️teste_evolutionv2◀️"
+                          "example": "▶️example◀️"
                         }
                       }
                     },
@@ -533,7 +533,7 @@
                       "remoteJid": "99999999999@s.whatsapp.net"
                     },
                     "message": {
-                      "conversation": "▶️teste_evolutionv2◀️"
+                      "conversation": "▶️example◀️"
                     },
                     "messageType": "conversation",
                     "messageTimestamp": 1768569655,
@@ -2024,6 +2024,389 @@
         "responses": {
           "204": {
             "description": "Confirmation occurs solely via the HTTP status code."
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Connection not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "CONNECTION_NOT_FOUND",
+                  "hint": "Connection not found."
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/v2/connections/{id}/templates": {
+      "get": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "List templates",
+        "operationId": "Connections_Templates_List",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Connection ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Template list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "parameter_format": {
+                        "type": "string"
+                      },
+                      "components": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "text": {
+                              "type": "string"
+                            },
+                            "format": {
+                              "type": "string"
+                            },
+                            "example": {
+                              "type": "object"
+                            },
+                            "buttons": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string"
+                                  },
+                                  "text": {
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "language": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "category": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "name": "example",
+                    "parameter_format": "POSITIONAL",
+                    "components": [
+                      {
+                        "type": "BODY",
+                        "text": "Thank you for your order, {{1}}! Your confirmation number is {{2}}. If you have any questions, please use the buttons below to contact support. Thank you for being a customer!",
+                        "example": {
+                          "body_text": [
+                            [
+                              "Pablo",
+                              "860198-230332"
+                            ]
+                          ]
+                        }
+                      },
+                      {
+                        "type": "BUTTONS",
+                        "buttons": [
+                          {
+                            "type": "QUICK_REPLY",
+                            "text": "Unsubscribe from Promos"
+                          },
+                          {
+                            "type": "URL",
+                            "text": "Contact Support",
+                            "url": "https://pingonotify.com/"
+                          }
+                        ]
+                      }
+                    ],
+                    "language": "en_US",
+                    "status": "APPROVED",
+                    "category": "MARKETING",
+                    "id": "99999999999999"
+                  },
+                  {
+                    "name": "hello_world",
+                    "parameter_format": "POSITIONAL",
+                    "components": [
+                      {
+                        "type": "HEADER",
+                        "format": "TEXT",
+                        "text": "Hello World"
+                      },
+                      {
+                        "type": "BODY",
+                        "text": "Welcome and congratulations!! This message demonstrates your ability to send a WhatsApp message notification from the Cloud API, hosted by Meta. Thank you for taking the time to test with us."
+                      },
+                      {
+                        "type": "FOOTER",
+                        "text": "WhatsApp Business Platform sample message"
+                      }
+                    ],
+                    "language": "en_US",
+                    "status": "APPROVED",
+                    "category": "UTILITY",
+                    "id": "99999999999999"
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Connection not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "message": "CONNECTION_NOT_FOUND",
+                  "hint": "Connection not found."
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Connections"
+        ],
+        "summary": "Create Template",
+        "operationId": "Connections_Templates_Create",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Connection ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "AUTHENTICATION",
+                      "MARKETING",
+                      "UTILITY"
+                    ]
+                  },
+                  "allowCategoryChange": {
+                    "type": "boolean"
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "webhookUrl": {
+                    "type": "string"
+                  },
+                  "components": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "BODY",
+                            "BUTTONS"
+                          ]
+                        },
+                        "text": {
+                          "type": "string"
+                        },
+                        "example": {
+                          "type": "object"
+                        },
+                        "buttons": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "QUICK_REPLY",
+                                  "URL"
+                                ]
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "name": "teste_evolution",
+                "category": "MARKETING",
+                "allowCategoryChange": false,
+                "language": "en_US",
+                "components": [
+                  {
+                    "type": "BODY",
+                    "text": "Thank you for your order, {{1}}! Your confirmation number is {{2}}. If you have any questions, please use the buttons below to contact support. Thank you for being a customer!",
+                    "example": {
+                      "body_text": [
+                        [
+                          "Pablo",
+                          "860198-230332"
+                        ]
+                      ]
+                    }
+                  },
+                  {
+                    "type": "BUTTONS",
+                    "buttons": [
+                      {
+                        "type": "QUICK_REPLY",
+                        "text": "Unsubscribe from Promos"
+                      },
+                      {
+                        "type": "URL",
+                        "text": "Contact Support",
+                        "url": "https://pingonotify.com"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "templateId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "template": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "webhookUrl": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "instanceId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "fwefr23f23r342r42r2343",
+                  "templateId": "99999999999999",
+                  "name": "teste_evolutionav2",
+                  "template": {
+                    "id": "99999999999999",
+                    "status": "PENDING",
+                    "category": "MARKETING"
+                  },
+                  "webhookUrl": null,
+                  "createdAt": "2026-01-16T18:24:18.141Z",
+                  "updatedAt": "2026-01-16T18:24:18.141Z",
+                  "instanceId": "1ad3de69-b96a-4ee8-9cd2-26247fca7647"
+                }
+              }
+            }
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
