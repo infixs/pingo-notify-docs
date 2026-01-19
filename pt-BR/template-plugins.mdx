@@ -10,13 +10,17 @@ O Pingo Notify transforma eventos do WordPress, WooCommerce e muitos outros plug
 
 <img src="/images/pt-BR/pingo-notify-wordpress-plugin-notification-base-example.png" alt="Interface do Editor de Templates" />
 
-## 1. Configuração do Envio
+## 1. Configuração de Notificação
 
 Antes de escrever a mensagem, defina na barra lateral:
 
 ### Trigger e Destino
-1.  **Trigger (Gatilho):** O evento que dispara a notificação (ex: "Order Status Change" para "Concluído").
-2.  **Conexão:** Qual conta conectada da sua loja enviará a mensagem.
+1.  **Trigger (Gatilho):** O evento que dispara a notificação. Veja alguns exemplos:
+    *   **Order Status Change:** Quando algum pedido do WooCommerce muda o status. Esse Trigger exige escolher um status específico ou a opção "Qualquer Status".
+    *   **New Order:** Quando um novo pedido do WooCommerce é criado.
+    *   **New Comment:** Quando um novo comentário é feito no site.
+    *   **Post Published:** Quando um novo post é publicado.
+2.  **Conexão:** Qual conexão/número de WhatsApp enviará essa notificação.
 3.  **Destinatário:** Quem recebe a mensagem:
     *   Variáveis dinâmicas (ex: `{{ order.shipping.phone }}`).
     *   Números fixos (ex: `5511999999999`).
