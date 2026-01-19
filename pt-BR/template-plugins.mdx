@@ -6,7 +6,7 @@ icon: square-envelope
 
 # Criando Notificações Customizadas
 
-O Pingo Notify transforma eventos (como "Novo Pedido") em mensagens de WhatsApp personalizadas.
+O Pingo Notify transforma eventos (como "Novo Pedido") em notificações automáticas personalizadas.
 
 <img src="/images/pt-BR/pingo-notify-wordpress-plugin-notification-base-example.png" alt="Interface do Editor de Templates" />
 
@@ -16,8 +16,20 @@ Antes de escrever a mensagem, defina na barra lateral:
 
 ### Trigger e Destino
 1.  **Trigger (Gatilho):** O evento que dispara a notificação (ex: "Order Status Change" para "Concluído").
-2.  **Conexão:** Qual WhatsApp da sua loja enviará a mensagem.
-3.  **Destinatário:** Quem recebe. Use variáveis dinâmicas (ex: `{{ order.full_phone }}`) em vez de números fixos.
+2.  **Conexão:** Qual conta conectada da sua loja enviará a mensagem.
+3.  **Destinatário:** Quem recebe a mensagem:
+    *   Variáveis dinâmicas (ex: `{{ order.shipping.phone }}`).
+    *   Números fixos (ex: `5511999999999`).
+    *   Múltiplos números separando por vírgula (ex: `{{ order.shipping.phone }}, 5511999999999`).
+    
+    <Info>
+    **Recomendação:** Utilize `{{ order.full_phone }}`. Esta variável garante que o número tenha o código do país, ao contrário de `{{ order.billing.phone }}` que utiliza o campo exatamente como o preenchido pelo usuário.
+    </Info>
+
+    <Warning>
+    **Formato do Número:** Use sempre o formato completo internacional (DDI + DDD + Número), apenas números e sem símbolos. O sinal de `+` no início é opcional (ex: `5511999999999` ou `+5511999999999`).
+    </Warning>
+
 
 **Adicionando e Editando Mensagens (Preview)**
 Você pode configurar uma sequência de mensagens para o mesmo evento. Interaja diretamente com o **Preview**:
@@ -34,12 +46,12 @@ As **Rules** (Regras) permitem adicionar inteligência aos seus envios, definind
 As regras são aplicadas individualmente a cada mensagem gerada. Isso significa que você pode filtrar envios com base nos dados específicos daquele evento (ex: valor do pedido, status do pagamento, cidade de entrega, etc).
 
 *   **Exemplo Prático**: Imagine uma regra para enviar apenas se o `order.total` for maior que **R$ 100**.
-    *   Se um pedido de R$ 50 entrar, **o envio é cancelado** silenciosamente.
+    *   Se um pedido de R$ 50 entrar, **o envio dessa mensagem (onde a regra foi aplicada) será ignorado**.
     *   Se um pedido de R$ 150 entrar, **o envio é realizado**.
 
 **Validando a Regra (Simulação Visual)**
 Para garantir que sua lógica está correta, use o **Preview** no editor:
-1.  Troque a **Exemplo de Dados** (no topo esquerdo) para diferentes pedidos.
+1.  Troque o **Exemplo de Dados** (no topo esquerdo) para diferentes pedidos.
 2.  Observe o comportamento do preview:
     *   🖼️ **Totalmente Visível:** Regra **Verdadeira** (a mensagem seria enviada).
     *   👻 **Opacidade Baixa (Transparente):** Regra **Falsa** (o envio seria ignorado).
@@ -60,13 +72,9 @@ No canto superior esquerdo, selecione um pedido real (ex: "Order #761"). Isso at
 
 ### Barra de Ferramentas
 *   **Attach:** Envie imagens, PDFs ou áudios junto com o texto.
-*   **Testar:** Use o botão **Send Test** para enviar a mensagem ao seu número pessoal antes de ativar (`Active`).
+*   **Enviar Teste:** Use o botão **Send Test** para enviar a mensagem ao seu número pessoal antes de ativar (`Active`).
 
 ---
-
-## 3. Sintaxe do Template
-
-Use o padrão `Handlebars` para inserir dados dinâmicos.
 
 ### Variáveis
 
@@ -77,7 +85,7 @@ Variáveis são os espaços reservados que serão substituídos pelos dados reai
 Toda variável deve estar entre chaves duplas `{{ }}`.
 
 ```handlebars
-Olá {{ customer.first_name }}, recebemos seu pedido!
+Olá {{ order.billing.first_name }}, recebemos seu pedido!
 ```
 
 Para acessar dados que estão dentro de outros objetos (como detalhes do endereço dentro do pedido), usamos o ponto `.`.
@@ -185,20 +193,21 @@ Valor total: {{ money order.total }}
 Template de **Pedido Concluído** com variáveis, loop de itens e condicional de parcelamento.
 
 ```handlebars
-Olá *{{ customer.first_name }}*! Tudo bem? 👋
+Olá {{ order.billing.first_name }}! Tudo bem? 
 
-Seu pedido *#{{ order.id }}* foi concluído!
-
-🛒 *Resumo da compra:*
-{{ #each order.items }}
-• {{ name }}
+Seu pedido #{{ order.id }} foi concluído!
+Resumo da compra: 
+{{ #each order.items }} 
+• {{ name }}  {{ quantity }}x {{ money total }}
 {{ /each }}
 
-{{ #if order.installments }}
-💳 Parcelado em {{ order.installments }}x.
+Método de pagamento: {{ order.payment_method_title }}
+Método de entrega: {{ order.shipping_method_title }}
+
+{{ #if order.payment_method_id "pix" }}
+Seu PIX foi recebido com sucesso!
 {{ /if }}
 
-💰 Total: *{{ money order.total }}*
-
+Total: {{ money order.total }}
 Equipe {{ store.name }}
 ```
