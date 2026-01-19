@@ -137,7 +137,8 @@
                   {
                     "group": "WordPress Plugins",
                     "pages": [
-                      "pt-BR/plugin-wordpress"
+                      "pt-BR/plugin-wordpress",
+                      "pt-BR/template-plugins"
                     ]
                   },
                   {
