@@ -36,9 +36,9 @@
                     ]
                   },
                   {
-                    "group": "Extensions",
+                    "group": "WordPress Plugins",
                     "pages": [
-                      "en/plugins"
+                      "en/plugin-wordpress"
                     ]
                   },
                   {
@@ -135,9 +135,9 @@
                     ]
                   },
                   {
-                    "group": "Extensões",
+                    "group": "WordPress Plugins",
                     "pages": [
-                      "pt-BR/plugins"
+                      "pt-BR/plugin-wordpress"
                     ]
                   },
                   {
