@@ -49,9 +49,9 @@ You can configure a sequence of messages for the same event. Interact directly w
 **Applies per Message**
 Rules are applied individually to each generated message. This means you can filter sends based on specific data from that event (e.g., order total, payment status, delivery city, etc.).
 
-*   **Practical Example**: Imagine a rule to send only if `order.total` is greater than **$ 100**.
-    *   If an order of $ 50 comes in, **sending this message (where the rule was applied) will be ignored**.
-    *   If an order of $ 150 comes in, **the send is performed**.
+*   **Practical Example**: Imagine a rule to send only if `order.total` is greater than **$100**.
+    *   If an order of $50 comes in, **sending this message (where the rule was applied) will be ignored**.
+    *   If an order of $150 comes in, **the send is performed**.
 
 **Validating the Rule (Visual Simulation)**
 To ensure your logic is correct, use the **Preview** in the editor:
@@ -167,10 +167,10 @@ Order Summary #{{ order.id }}:
 
 {{ #each order.items }}
 📦 {{ name }}
-   Qty: {{ quantity }} x $ {{ price }}
+   Qty: {{ quantity }} x ${{ price }}
 {{ /each }}
 
-Total: $ {{ order.total }}
+Total: ${{ order.total }}
 ```
 
 <Info>
@@ -188,7 +188,7 @@ Observe the use of the word `money` before the price variable. This tells the sy
 ```handlebars
 Total value: {{ money order.total }}
 ```
-*Result:* `$ 1,250.00`
+*Result:* `$1,250.00`
 
 ---
 
