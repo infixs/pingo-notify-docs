@@ -8,7 +8,7 @@ icon: square-envelope
 
 Pingo Notify turns WordPress, WooCommerce, and many other plugin events into custom automated notifications.
 
-<img src="/images/pt-BR/pingo-notify-wordpress-plugin-notification-base-example.png" alt="Template Editor Interface" />
+<img src="/images/en/pingo-notify-wordpress-plugin-notification-base-example.png" alt="Template Editor Interface" />
 
 ## 1. Notification Setup
 
@@ -23,15 +23,15 @@ Before writing the message, define the following in the sidebar:
 2.  **Connection:** Which WhatsApp connection/number will send this notification.
 3.  **Recipient:** Who receives the message:
     *   Dynamic variables (e.g., `{{ order.shipping.phone }}`).
-    *   Fixed numbers (e.g., `5511999999999`).
-    *   Multiple numbers separated by commas (e.g., `{{ order.shipping.phone }}, 5511999999999`).
+    *   Fixed numbers (e.g., `15551234567`).
+    *   Multiple numbers separated by commas (e.g., `{{ order.shipping.phone }}, 15551234567`).
     
     <Info>
     **Recommendation:** Use `{{ order.full_phone }}`. This variable ensures the number includes the country code, unlike `{{ order.billing.phone }}` which uses the field exactly as filled by the user.
     </Info>
 
     <Warning>
-    **Number Format:** Always use the full international format (DDI + DDD + Number), only numbers and no symbols. The `+` sign at the beginning is optional (e.g., `5511999999999` or `+5511999999999`).
+    **Number Format:** Always use the full international format (Country Code + Area Code + Number), only numbers and no symbols. The `+` sign at the beginning is optional (e.g., `15551234567` or `+15551234567`).
     </Warning>
 
 
@@ -49,9 +49,9 @@ You can configure a sequence of messages for the same event. Interact directly w
 **Applies per Message**
 Rules are applied individually to each generated message. This means you can filter sends based on specific data from that event (e.g., order total, payment status, delivery city, etc.).
 
-*   **Practical Example**: Imagine a rule to send only if `order.total` is greater than **R$ 100**.
-    *   If an order of R$ 50 comes in, **sending this message (where the rule was applied) will be ignored**.
-    *   If an order of R$ 150 comes in, **the send is performed**.
+*   **Practical Example**: Imagine a rule to send only if `order.total` is greater than **$ 100**.
+    *   If an order of $ 50 comes in, **sending this message (where the rule was applied) will be ignored**.
+    *   If an order of $ 150 comes in, **the send is performed**.
 
 **Validating the Rule (Visual Simulation)**
 To ensure your logic is correct, use the **Preview** in the editor:
@@ -62,7 +62,7 @@ To ensure your logic is correct, use the **Preview** in the editor:
 
 <div style={{ display: 'grid', placeItems: 'center' }}>
 <img
-  src="/images/pt-BR/pingo-notify-plugin-wordpress-message-opacity-preview.png"
+  src="/images/en/pingo-notify-plugin-wordpress-message-opacity-preview.png"
   alt="Template Editor Interface for rules"
 />
 </div>
@@ -167,10 +167,10 @@ Order Summary #{{ order.id }}:
 
 {{ #each order.items }}
 📦 {{ name }}
-   Qty: {{ quantity }} x R$ {{ price }}
+   Qty: {{ quantity }} x $ {{ price }}
 {{ /each }}
 
-Total: R$ {{ order.total }}
+Total: $ {{ order.total }}
 ```
 
 <Info>
@@ -188,7 +188,7 @@ Observe the use of the word `money` before the price variable. This tells the sy
 ```handlebars
 Total value: {{ money order.total }}
 ```
-*Result:* `R$ 1.250,00`
+*Result:* `$ 1,250.00`
 
 ---
 

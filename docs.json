@@ -38,7 +38,8 @@
                   {
                     "group": "WordPress Plugins",
                     "pages": [
-                      "en/plugin-wordpress"
+                      "en/plugin-wordpress",
+                      "en/template-plugins"
                     ]
                   },
                   {
