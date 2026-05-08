@@ -23,9 +23,7 @@
                 "groups": [
                   {
                     "group": "Getting Started",
-                    "pages": [
-                      "en/index"
-                    ]
+                    "pages": ["en/index"]
                   },
                   {
                     "group": "Features",
@@ -39,14 +37,13 @@
                     "group": "WordPress Plugin",
                     "pages": [
                       "en/plugin-wordpress",
-                      "en/template-plugins"
+                      "en/template-plugins",
+                      "en/hooks-and-development"
                     ]
                   },
                   {
                     "group": "Authentication",
-                    "pages": [
-                      "en/apikeys"
-                    ]
+                    "pages": ["en/apikeys"]
                   }
                 ]
               },
@@ -123,9 +120,7 @@
                 "groups": [
                   {
                     "group": "Começando",
-                    "pages": [
-                      "pt-BR/index"
-                    ]
+                    "pages": ["pt-BR/index"]
                   },
                   {
                     "group": "Recursos",
@@ -139,14 +134,13 @@
                     "group": "WordPress Plugin",
                     "pages": [
                       "pt-BR/plugin-wordpress",
-                      "pt-BR/template-plugins"
+                      "pt-BR/template-plugins",
+                      "pt-BR/hooks-and-development"
                     ]
                   },
                   {
                     "group": "Autenticação",
-                    "pages": [
-                      "pt-BR/apikeys"
-                    ]
+                    "pages": ["pt-BR/apikeys"]
                   }
                 ]
               },
