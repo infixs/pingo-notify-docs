@@ -12,7 +12,6 @@
     "languages": [
       {
         "language": "en",
-        "default": true,
         "versions": [
           {
             "version": "v2",
