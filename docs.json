@@ -39,6 +39,7 @@
                     "group": "WordPress Plugin",
                     "pages": [
                       "en/plugin-wordpress",
+                      "en/hooks-and-development",
                       "en/template-plugins"
                     ]
                   },
@@ -139,6 +140,7 @@
                     "group": "WordPress Plugin",
                     "pages": [
                       "pt-BR/plugin-wordpress",
+                      "pt-BR/hooks-and-development",
                       "pt-BR/template-plugins"
                     ]
                   },
