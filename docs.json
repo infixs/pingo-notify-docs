@@ -12,7 +12,7 @@
     "languages": [
       {
         "language": "en",
-        "openapi": "./en/api-reference/v2/openapi.json",
+        "default": true,
         "versions": [
           {
             "version": "v2",
@@ -39,7 +39,6 @@
                     "group": "WordPress Plugin",
                     "pages": [
                       "en/plugin-wordpress",
-                      "en/hooks-and-development",
                       "en/template-plugins"
                     ]
                   },
@@ -54,6 +53,7 @@
               {
                 "tab": "API Reference",
                 "icon": "signs-post",
+                "openapi": "./en/api-reference/v2/openapi.json",
                 "groups": [
                   {
                     "group": "API Documentation",
@@ -113,7 +113,6 @@
       },
       {
         "language": "pt-BR",
-        "openapi": "./pt-BR/api-reference/v2/openapi.json",
         "versions": [
           {
             "version": "v2",
@@ -140,7 +139,6 @@
                     "group": "WordPress Plugin",
                     "pages": [
                       "pt-BR/plugin-wordpress",
-                      "pt-BR/hooks-and-development",
                       "pt-BR/template-plugins"
                     ]
                   },
@@ -155,6 +153,7 @@
               {
                 "tab": "Referência da API",
                 "icon": "signs-post",
+                "openapi": "./pt-BR/api-reference/v2/openapi.json",
                 "groups": [
                   {
                     "group": "Documentação da API",
