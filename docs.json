@@ -22,7 +22,7 @@
                 "groups": [
                   {
                     "group": "Getting Started",
-                    "pages": ["en/index"]
+                    "pages": ["en/index", "en/official-whatsapp-api"]
                   },
                   {
                     "group": "Features",
@@ -119,7 +119,7 @@
                 "groups": [
                   {
                     "group": "Começando",
-                    "pages": ["pt-BR/index"]
+                    "pages": ["pt-BR/index", "pt-BR/official-whatsapp-api"]
                   },
                   {
                     "group": "Recursos",
