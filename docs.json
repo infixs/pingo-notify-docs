@@ -14,7 +14,7 @@
         "language": "en",
         "versions": [
           {
-            "version": "v2",
+            "version": "v3",
             "tabs": [
               {
                 "tab": "Documentation",
@@ -22,7 +22,10 @@
                 "groups": [
                   {
                     "group": "Getting Started",
-                    "pages": ["en/index", "en/official-whatsapp-api"]
+                    "pages": [
+                      "en/index",
+                      "en/official-whatsapp-api"
+                    ]
                   },
                   {
                     "group": "Features",
@@ -42,7 +45,431 @@
                   },
                   {
                     "group": "Authentication",
-                    "pages": ["en/apikeys"]
+                    "pages": [
+                      "en/apikeys"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tab": "API Reference",
+                "icon": "signs-post",
+                "openapi": "./en/api-reference/v3/openapi.json",
+                "groups": [
+                  {
+                    "group": "API Documentation",
+                    "pages": [
+                      "en/api-reference/v3/index",
+                      "en/api-reference/v3/authentication",
+                      "en/api-reference/v3/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Connections",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/connections/connections_list",
+                      "en/api-reference/v3/endpoints/connections/connections_create",
+                      "en/api-reference/v3/endpoints/connections/connections_sorting",
+                      "en/api-reference/v3/endpoints/connections/connections_update",
+                      "en/api-reference/v3/endpoints/connections/connections_delete",
+                      "en/api-reference/v3/endpoints/connections/connections_logout",
+                      "en/api-reference/v3/endpoints/connections/connections_qrcode"
+                    ]
+                  },
+                  {
+                    "group": "Chats",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/chats/connections_chats_fetch",
+                      "en/api-reference/v3/endpoints/chats/connections_chats_send_presence"
+                    ]
+                  },
+                  {
+                    "group": "Messages",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_download",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_history",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_send",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_send_button",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_send_list",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_send_template",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_send_voice_audio",
+                      "en/api-reference/v3/endpoints/messages/connections_chats_messages_send_sticker"
+                    ]
+                  },
+                  {
+                    "group": "Media",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/media/connections_media_download"
+                    ]
+                  },
+                  {
+                    "group": "Templates",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/templates/connections_templates_list",
+                      "en/api-reference/v3/endpoints/templates/connections_templates_create",
+                      "en/api-reference/v3/endpoints/templates/connections_templates_get",
+                      "en/api-reference/v3/endpoints/templates/connections_templates_delete"
+                    ]
+                  },
+                  {
+                    "group": "Verifications",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/verifications/connections_check_whatsapp_shared",
+                      "en/api-reference/v3/endpoints/verifications/connections_check_whatsapp"
+                    ]
+                  },
+                  {
+                    "group": "Accounts",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/accounts/accounts_current",
+                      "en/api-reference/v3/endpoints/accounts/accounts_update",
+                      "en/api-reference/v3/endpoints/accounts/accounts_remove",
+                      "en/api-reference/v3/endpoints/accounts/accounts_transfer",
+                      "en/api-reference/v3/endpoints/accounts/accounts_list_mine"
+                    ]
+                  },
+                  {
+                    "group": "Members",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/members/members_list",
+                      "en/api-reference/v3/endpoints/members/members_invite",
+                      "en/api-reference/v3/endpoints/members/members_leave",
+                      "en/api-reference/v3/endpoints/members/members_list_pending",
+                      "en/api-reference/v3/endpoints/members/members_update_roles",
+                      "en/api-reference/v3/endpoints/members/members_remove"
+                    ]
+                  },
+                  {
+                    "group": "Invitations",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/invitations/invitations_list_mine",
+                      "en/api-reference/v3/endpoints/invitations/invitations_decline",
+                      "en/api-reference/v3/endpoints/invitations/invitations_accept"
+                    ]
+                  },
+                  {
+                    "group": "Billing",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/billing/billing_overview",
+                      "en/api-reference/v3/endpoints/billing/billing_payments"
+                    ]
+                  },
+                  {
+                    "group": "API Tokens",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/api-tokens/api_tokens_list",
+                      "en/api-reference/v3/endpoints/api-tokens/api_tokens_create",
+                      "en/api-reference/v3/endpoints/api-tokens/api_tokens_update",
+                      "en/api-reference/v3/endpoints/api-tokens/api_tokens_delete"
+                    ]
+                  },
+                  {
+                    "group": "OAuth Apps",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/oauth-apps/oauth_apps_list",
+                      "en/api-reference/v3/endpoints/oauth-apps/oauth_apps_create",
+                      "en/api-reference/v3/endpoints/oauth-apps/oauth_apps_delete"
+                    ]
+                  },
+                  {
+                    "group": "Integrations",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/integrations/integrations_list",
+                      "en/api-reference/v3/endpoints/integrations/integrations_create",
+                      "en/api-reference/v3/endpoints/integrations/integrations_apps_list",
+                      "en/api-reference/v3/endpoints/integrations/integrations_chatwoot_inboxes_list",
+                      "en/api-reference/v3/endpoints/integrations/integrations_chatwoot_inboxes_create",
+                      "en/api-reference/v3/endpoints/integrations/integrations_chatwoot_inboxes_remove",
+                      "en/api-reference/v3/endpoints/integrations/integrations_chatwoot_link",
+                      "en/api-reference/v3/endpoints/integrations/integrations_get",
+                      "en/api-reference/v3/endpoints/integrations/integrations_update",
+                      "en/api-reference/v3/endpoints/integrations/integrations_remove"
+                    ]
+                  },
+                  {
+                    "group": "Stats",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/stats/stats_get"
+                    ]
+                  },
+                  {
+                    "group": "Summary",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/summary/summary_overview"
+                    ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_list",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_create",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_whatsapp_challenge",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_whatsapp_inbound",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_update",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_remove",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_secret_reveal",
+                      "en/api-reference/v3/endpoints/webhooks/webhooks_secret_rotate"
+                    ]
+                  },
+                  {
+                    "group": "Helpdesk",
+                    "pages": [
+                      {
+                        "group": "Conversations",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_list",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_start",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_stats",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_get",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_update",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_assign",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_add_labels",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_remove_label",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_add_participant",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_remove_participant",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_mark_read",
+                          "en/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_toggle_status"
+                        ]
+                      },
+                      {
+                        "group": "Messages",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_list",
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_create",
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_attachment_download",
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_attachment_public_download",
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_update",
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_retry"
+                        ]
+                      },
+                      {
+                        "group": "Templates",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-templates/helpdesk_templates_list",
+                          "en/api-reference/v3/endpoints/helpdesk-templates/helpdesk_templates_sync"
+                        ]
+                      },
+                      {
+                        "group": "SLA",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_conversation_sla_get",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_conversation_sla_apply",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_conversation_sla_remove",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_list",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_create",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_get",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_update",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_report_get"
+                        ]
+                      },
+                      {
+                        "group": "Contacts",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_list",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_create",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_get",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_update",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_avatar_destroy",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_contactable_inboxes",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_conversations_list",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_custom_attributes_destroy",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_labels_list",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_labels_set",
+                          "en/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_merge"
+                        ]
+                      },
+                      {
+                        "group": "Sync",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-sync/helpdesk_contacts_sync_start",
+                          "en/api-reference/v3/endpoints/helpdesk-sync/helpdesk_contacts_sync_latest",
+                          "en/api-reference/v3/endpoints/helpdesk-sync/helpdesk_conversations_sync_start",
+                          "en/api-reference/v3/endpoints/helpdesk-sync/helpdesk_conversations_sync_latest"
+                        ]
+                      },
+                      {
+                        "group": "Notes",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_list",
+                          "en/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_create",
+                          "en/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_update",
+                          "en/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_delete"
+                        ]
+                      },
+                      {
+                        "group": "Custom Attributes",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_list",
+                          "en/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_create",
+                          "en/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_update",
+                          "en/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_delete"
+                        ]
+                      },
+                      {
+                        "group": "Custom Filters",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_list",
+                          "en/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_create",
+                          "en/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_update",
+                          "en/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_delete"
+                        ]
+                      },
+                      {
+                        "group": "Labels",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_list",
+                          "en/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_create",
+                          "en/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_update",
+                          "en/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_delete"
+                        ]
+                      },
+                      {
+                        "group": "Inboxes",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_list",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_create",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_get",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_update",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_members_list",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_members_add",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_members_remove",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_working_hours_list",
+                          "en/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_working_hours_upsert"
+                        ]
+                      },
+                      {
+                        "group": "Teams",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_list",
+                          "en/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_create",
+                          "en/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_update",
+                          "en/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_members_add",
+                          "en/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_members_remove"
+                        ]
+                      },
+                      {
+                        "group": "Agents",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-agents/helpdesk_agents_list",
+                          "en/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_get",
+                          "en/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_set_auto_offline",
+                          "en/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_set_availability",
+                          "en/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_set_signature"
+                        ]
+                      },
+                      {
+                        "group": "Canned Responses",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_list",
+                          "en/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_create",
+                          "en/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_search",
+                          "en/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_update",
+                          "en/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_delete"
+                        ]
+                      },
+                      {
+                        "group": "Agent Bots",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_list",
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_create",
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_get",
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_update",
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_attach_inbox",
+                          "en/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_detach_inbox"
+                        ]
+                      },
+                      {
+                        "group": "Reports",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_agent_overview",
+                          "en/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_conversation_traffic",
+                          "en/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_csat",
+                          "en/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_inbox",
+                          "en/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_label",
+                          "en/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_team"
+                        ]
+                      },
+                      {
+                        "group": "CSAT",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-csat/helpdesk_csat_public_view",
+                          "en/api-reference/v3/endpoints/helpdesk-csat/helpdesk_csat_public_submit",
+                          "en/api-reference/v3/endpoints/helpdesk-csat/helpdesk_csat_list"
+                        ]
+                      },
+                      {
+                        "group": "Notifications",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_settings_get",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_settings_update",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_subscriptions_upsert",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_subscriptions_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_list",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_read_all",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_unread_count",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_read_one",
+                          "en/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_snooze"
+                        ]
+                      },
+                      {
+                        "group": "Webhooks",
+                        "pages": [
+                          "en/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_list",
+                          "en/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_create",
+                          "en/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_update",
+                          "en/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_delete",
+                          "en/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_test",
+                          "en/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_inbound_ingest"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "version": "v2",
+            "tabs": [
+              {
+                "tab": "Documentation",
+                "icon": "book",
+                "groups": [
+                  {
+                    "group": "Getting Started",
+                    "pages": [
+                      "en/index",
+                      "en/official-whatsapp-api"
+                    ]
+                  },
+                  {
+                    "group": "Features",
+                    "pages": [
+                      "en/connections",
+                      "en/integrations",
+                      "en/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "WordPress Plugin",
+                    "pages": [
+                      "en/plugin-wordpress",
+                      "en/template-plugins",
+                      "en/hooks-and-development"
+                    ]
+                  },
+                  {
+                    "group": "Authentication",
+                    "pages": [
+                      "en/apikeys"
+                    ]
                   }
                 ]
               },
@@ -92,7 +519,9 @@
                   },
                   {
                     "group": "Verifications",
-                    "pages": ["en/api-reference/v2/endpoints/check/whatsapp"]
+                    "pages": [
+                      "en/api-reference/v2/endpoints/check/whatsapp"
+                    ]
                   },
                   {
                     "group": "Templates",
@@ -111,7 +540,7 @@
         "language": "pt-BR",
         "versions": [
           {
-            "version": "v2",
+            "version": "v3",
             "tabs": [
               {
                 "tab": "Documentação",
@@ -119,7 +548,10 @@
                 "groups": [
                   {
                     "group": "Começando",
-                    "pages": ["pt-BR/index", "pt-BR/official-whatsapp-api"]
+                    "pages": [
+                      "pt-BR/index",
+                      "pt-BR/official-whatsapp-api"
+                    ]
                   },
                   {
                     "group": "Recursos",
@@ -139,7 +571,431 @@
                   },
                   {
                     "group": "Autenticação",
-                    "pages": ["pt-BR/apikeys"]
+                    "pages": [
+                      "pt-BR/apikeys"
+                    ]
+                  }
+                ]
+              },
+              {
+                "tab": "Referência da API",
+                "icon": "signs-post",
+                "openapi": "./pt-BR/api-reference/v3/openapi.json",
+                "groups": [
+                  {
+                    "group": "Documentação da API",
+                    "pages": [
+                      "pt-BR/api-reference/v3/index",
+                      "pt-BR/api-reference/v3/authentication",
+                      "pt-BR/api-reference/v3/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "Connections",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_list",
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_create",
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_sorting",
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_update",
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_delete",
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_logout",
+                      "pt-BR/api-reference/v3/endpoints/connections/connections_qrcode"
+                    ]
+                  },
+                  {
+                    "group": "Chats",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/chats/connections_chats_fetch",
+                      "pt-BR/api-reference/v3/endpoints/chats/connections_chats_send_presence"
+                    ]
+                  },
+                  {
+                    "group": "Messages",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_download",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_history",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send_button",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send_list",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send_template",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send_voice_audio",
+                      "pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send_sticker"
+                    ]
+                  },
+                  {
+                    "group": "Media",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/media/connections_media_download"
+                    ]
+                  },
+                  {
+                    "group": "Templates",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/templates/connections_templates_list",
+                      "pt-BR/api-reference/v3/endpoints/templates/connections_templates_create",
+                      "pt-BR/api-reference/v3/endpoints/templates/connections_templates_get",
+                      "pt-BR/api-reference/v3/endpoints/templates/connections_templates_delete"
+                    ]
+                  },
+                  {
+                    "group": "Verifications",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/verifications/connections_check_whatsapp_shared",
+                      "pt-BR/api-reference/v3/endpoints/verifications/connections_check_whatsapp"
+                    ]
+                  },
+                  {
+                    "group": "Accounts",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/accounts/accounts_current",
+                      "pt-BR/api-reference/v3/endpoints/accounts/accounts_update",
+                      "pt-BR/api-reference/v3/endpoints/accounts/accounts_remove",
+                      "pt-BR/api-reference/v3/endpoints/accounts/accounts_transfer",
+                      "pt-BR/api-reference/v3/endpoints/accounts/accounts_list_mine"
+                    ]
+                  },
+                  {
+                    "group": "Members",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/members/members_list",
+                      "pt-BR/api-reference/v3/endpoints/members/members_invite",
+                      "pt-BR/api-reference/v3/endpoints/members/members_leave",
+                      "pt-BR/api-reference/v3/endpoints/members/members_list_pending",
+                      "pt-BR/api-reference/v3/endpoints/members/members_update_roles",
+                      "pt-BR/api-reference/v3/endpoints/members/members_remove"
+                    ]
+                  },
+                  {
+                    "group": "Invitations",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/invitations/invitations_list_mine",
+                      "pt-BR/api-reference/v3/endpoints/invitations/invitations_decline",
+                      "pt-BR/api-reference/v3/endpoints/invitations/invitations_accept"
+                    ]
+                  },
+                  {
+                    "group": "Billing",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/billing/billing_overview",
+                      "pt-BR/api-reference/v3/endpoints/billing/billing_payments"
+                    ]
+                  },
+                  {
+                    "group": "API Tokens",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/api-tokens/api_tokens_list",
+                      "pt-BR/api-reference/v3/endpoints/api-tokens/api_tokens_create",
+                      "pt-BR/api-reference/v3/endpoints/api-tokens/api_tokens_update",
+                      "pt-BR/api-reference/v3/endpoints/api-tokens/api_tokens_delete"
+                    ]
+                  },
+                  {
+                    "group": "OAuth Apps",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/oauth-apps/oauth_apps_list",
+                      "pt-BR/api-reference/v3/endpoints/oauth-apps/oauth_apps_create",
+                      "pt-BR/api-reference/v3/endpoints/oauth-apps/oauth_apps_delete"
+                    ]
+                  },
+                  {
+                    "group": "Integrations",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_list",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_create",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_apps_list",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_chatwoot_inboxes_list",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_chatwoot_inboxes_create",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_chatwoot_inboxes_remove",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_chatwoot_link",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_get",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_update",
+                      "pt-BR/api-reference/v3/endpoints/integrations/integrations_remove"
+                    ]
+                  },
+                  {
+                    "group": "Stats",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/stats/stats_get"
+                    ]
+                  },
+                  {
+                    "group": "Summary",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/summary/summary_overview"
+                    ]
+                  },
+                  {
+                    "group": "Webhooks",
+                    "pages": [
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_list",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_create",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_whatsapp_challenge",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_whatsapp_inbound",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_update",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_remove",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_secret_reveal",
+                      "pt-BR/api-reference/v3/endpoints/webhooks/webhooks_secret_rotate"
+                    ]
+                  },
+                  {
+                    "group": "Helpdesk",
+                    "pages": [
+                      {
+                        "group": "Conversations",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_start",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_stats",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_assign",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_add_labels",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_remove_label",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_add_participant",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_remove_participant",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_mark_read",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-conversations/helpdesk_conversations_toggle_status"
+                        ]
+                      },
+                      {
+                        "group": "Messages",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_attachment_download",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_attachment_public_download",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-messages/helpdesk_messages_retry"
+                        ]
+                      },
+                      {
+                        "group": "Templates",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-templates/helpdesk_templates_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-templates/helpdesk_templates_sync"
+                        ]
+                      },
+                      {
+                        "group": "SLA",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_conversation_sla_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_conversation_sla_apply",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_conversation_sla_remove",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_policies_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sla/helpdesk_sla_report_get"
+                        ]
+                      },
+                      {
+                        "group": "Contacts",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_avatar_destroy",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_contactable_inboxes",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_conversations_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_custom_attributes_destroy",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_labels_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_labels_set",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-contacts/helpdesk_contacts_merge"
+                        ]
+                      },
+                      {
+                        "group": "Sync",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sync/helpdesk_contacts_sync_start",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sync/helpdesk_contacts_sync_latest",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sync/helpdesk_conversations_sync_start",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-sync/helpdesk_conversations_sync_latest"
+                        ]
+                      },
+                      {
+                        "group": "Notes",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notes/helpdesk_notes_delete"
+                        ]
+                      },
+                      {
+                        "group": "Custom Attributes",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-attributes/helpdesk_custom_attributes_delete"
+                        ]
+                      },
+                      {
+                        "group": "Custom Filters",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-custom-filters/helpdesk_custom_filters_delete"
+                        ]
+                      },
+                      {
+                        "group": "Labels",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-labels/helpdesk_labels_delete"
+                        ]
+                      },
+                      {
+                        "group": "Inboxes",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_members_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_members_add",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_members_remove",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_working_hours_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-inboxes/helpdesk_inboxes_working_hours_upsert"
+                        ]
+                      },
+                      {
+                        "group": "Teams",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_members_add",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-teams/helpdesk_teams_members_remove"
+                        ]
+                      },
+                      {
+                        "group": "Agents",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agents/helpdesk_agents_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_set_auto_offline",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_set_availability",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agents/helpdesk_profile_set_signature"
+                        ]
+                      },
+                      {
+                        "group": "Canned Responses",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_search",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-canned-responses/helpdesk_canned_responses_delete"
+                        ]
+                      },
+                      {
+                        "group": "Agent Bots",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_attach_inbox",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-agent-bots/helpdesk_agent_bots_detach_inbox"
+                        ]
+                      },
+                      {
+                        "group": "Reports",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_agent_overview",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_conversation_traffic",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_csat",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_inbox",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_label",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-reports/helpdesk_reports_team"
+                        ]
+                      },
+                      {
+                        "group": "CSAT",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-csat/helpdesk_csat_public_view",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-csat/helpdesk_csat_public_submit",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-csat/helpdesk_csat_list"
+                        ]
+                      },
+                      {
+                        "group": "Notifications",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_settings_get",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_settings_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_subscriptions_upsert",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notification_subscriptions_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_read_all",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_unread_count",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_read_one",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-notifications/helpdesk_notifications_snooze"
+                        ]
+                      },
+                      {
+                        "group": "Webhooks",
+                        "pages": [
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_list",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_create",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_update",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_delete",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_test",
+                          "pt-BR/api-reference/v3/endpoints/helpdesk-webhooks/helpdesk_webhooks_inbound_ingest"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "version": "v2",
+            "tabs": [
+              {
+                "tab": "Documentação",
+                "icon": "book",
+                "groups": [
+                  {
+                    "group": "Começando",
+                    "pages": [
+                      "pt-BR/index",
+                      "pt-BR/official-whatsapp-api"
+                    ]
+                  },
+                  {
+                    "group": "Recursos",
+                    "pages": [
+                      "pt-BR/connections",
+                      "pt-BR/integrations",
+                      "pt-BR/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "WordPress Plugin",
+                    "pages": [
+                      "pt-BR/plugin-wordpress",
+                      "pt-BR/template-plugins",
+                      "pt-BR/hooks-and-development"
+                    ]
+                  },
+                  {
+                    "group": "Autenticação",
+                    "pages": [
+                      "pt-BR/apikeys"
+                    ]
                   }
                 ]
               },
@@ -189,7 +1045,9 @@
                   },
                   {
                     "group": "Verificações",
-                    "pages": ["pt-BR/api-reference/v2/endpoints/check/whatsapp"]
+                    "pages": [
+                      "pt-BR/api-reference/v2/endpoints/check/whatsapp"
+                    ]
                   },
                   {
                     "group": "Templates",

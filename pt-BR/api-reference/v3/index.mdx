@@ -1,0 +1,50 @@
+---
+title: "API Pingo Notify v3"
+description: "Conecte o WhatsApp, envie e receba mensagens, gerencie workspaces e opere um Helpdesk multiagente completo."
+icon: "sparkles"
+---
+
+A **API v3** é a geração atual da API REST do Pingo Notify. Ela cobre desde uma única conexão de WhatsApp
+até um Helpdesk completo e multiagente.
+
+<Info>
+  URL base: `https://api.pingonotify.com`
+</Info>
+
+## O que há de novo na v3
+
+- **Workspaces (contas).** Todo recurso vive dentro de um workspace. Troque o workspace ativo por requisição
+  com o header opcional `X-Account-Id` — sem precisar de credenciais separadas por workspace.
+- **Destinatário no corpo.** Os endpoints de chat não colocam mais o número na URL. O destino
+  (`to` / `remoteJid`) viaja no **corpo** da requisição (ou na query, no histórico via `GET`). O id da conexão
+  permanece no path (`:id`).
+- **Helpdesk.** Uma camada de atendimento completa: conversas, contatos, caixas de entrada, equipes, etiquetas,
+  SLA, relatórios, CSAT, respostas rápidas, agent bots e notificações.
+- **WhatsApp oficial + não oficial.** A mesma superfície opera tanto a API oficial WhatsApp Cloud quanto a
+  conexão não oficial (via Evolution).
+
+## Autenticação
+
+Toda requisição autenticada leva um **API token** no header `apikey`:
+
+```bash
+curl https://api.pingonotify.com/v3/connections \
+  --header 'apikey: sk_live_<YOUR_TOKEN>'
+```
+
+Veja [Autenticação](/pt-BR/api-reference/v3/authentication) para criar um token e selecionar um workspace.
+
+## Recebendo eventos
+
+O Pingo Notify envia eventos do WhatsApp em tempo real (mensagens recebidas, atualizações de status, presença,
+mudanças de conexão) para a sua URL. Veja [Webhooks](/pt-BR/api-reference/v3/webhooks) para o catálogo de
+eventos, formatos de payload, download de mídia e verificação de assinatura HMAC.
+
+<CardGroup cols={2}>
+  <Card title="Envie sua primeira mensagem" icon="paper-plane" href="/pt-BR/api-reference/v3/endpoints/messages/connections_chats_messages_send">
+    Envie texto e mídia para um número de WhatsApp.
+  </Card>
+  <Card title="Webhooks" icon="bolt" href="/pt-BR/api-reference/v3/webhooks">
+    Receba mensagens e eventos em tempo real.
+  </Card>
+</CardGroup>

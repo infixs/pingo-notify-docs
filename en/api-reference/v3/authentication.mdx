@@ -1,0 +1,69 @@
+---
+title: "Authentication"
+description: "Authenticate v3 requests with an API token and select the active workspace."
+icon: "key"
+---
+
+The v3 API authenticates with an **API token** sent in the `apikey` header. Tokens are scoped to a workspace
+and a user, and they carry the same permissions as that member.
+
+## API token format
+
+| Prefix | Mode |
+| :--- | :--- |
+| `sk_live_…` | Live (production) traffic |
+| `sk_test_…` | Test mode |
+
+The full token is shown **only once**, at creation time. Store it securely.
+
+## Create a token
+
+You can create tokens from the dashboard, or via the API:
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/api-tokens \
+  --header 'apikey: sk_live_<YOUR_TOKEN>' \
+  --header 'Content-Type: application/json' \
+  --data '{ "name": "Backend integration" }'
+```
+
+The response includes the plaintext `token` once. Subsequent calls only return a masked preview
+(`tokenLast4`).
+
+## Use the token
+
+Send it in the `apikey` header on every request:
+
+```bash
+curl https://api.pingonotify.com/v3/connections \
+  --header 'apikey: sk_live_<YOUR_TOKEN>'
+```
+
+## Select a workspace — `X-Account-Id`
+
+Every resource belongs to a **workspace** (account). Without any header, the token's default/personal
+workspace is used. To act on a specific workspace, add the optional `X-Account-Id` header:
+
+```bash
+curl https://api.pingonotify.com/v3/helpdesk/conversations \
+  --header 'apikey: sk_live_<YOUR_TOKEN>' \
+  --header 'X-Account-Id: 7c3f1e90-7d4a-4b0a-9b6e-2b6f0a1c2d3e'
+```
+
+<Warning>
+  A workspace the token does not belong to yields `403 Forbidden`. List the workspaces a token can reach with
+  `GET /v3/accounts`.
+</Warning>
+
+## Errors
+
+| Status | Meaning |
+| :--- | :--- |
+| `401` | Missing, invalid or expired `apikey`. |
+| `403` | The token cannot access the requested workspace (`X-Account-Id`). |
+
+## Security — best practices
+
+- Never commit tokens to source control. Use environment variables or a secrets vault.
+- Use `sk_test_…` in non-production environments.
+- Rotate and revoke unused tokens (`DELETE /v3/api-tokens/{id}`).

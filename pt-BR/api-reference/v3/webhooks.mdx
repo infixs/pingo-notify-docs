@@ -1,0 +1,391 @@
+---
+title: "Webhooks e Eventos"
+description: "Receba eventos do WhatsApp em tempo real: envelope, catálogo de eventos, formatos de payload, download de mídia e verificação de assinatura HMAC."
+icon: "webhook"
+---
+
+O Pingo Notify envia eventos do WhatsApp em tempo real para uma URL HTTPS que você controla. Cada evento é um
+único `POST` com corpo JSON. A mídia recebida traz um link de download pronto para uso, e as entregas podem ser
+**assinadas com HMAC** para você verificar a autenticidade.
+
+<Info>
+  **Fluxo:** WhatsApp → Conexão (Evolution / WhatsApp Cloud) → Pingo Notify → sua URL de webhook.
+  Uma conexão pode distribuir para vários webhooks; um webhook pode ouvir várias conexões.
+</Info>
+
+## Gerenciar assinaturas
+
+Crie e gerencie assinaturas de webhook pelo dashboard ou via API
+([endpoints de Webhooks](/pt-BR/api-reference/v3/endpoints/webhooks/webhooks_list)). Uma assinatura tem:
+
+- uma **URL** de destino,
+- uma lista de **eventos** a receber,
+- um interruptor **HMAC** (`hmacEnabled`) e um **segredo** de assinatura,
+- **agrupamento de mensagens** e **simulação de digitação** opcionais.
+
+## Envelope
+
+Toda entrega compartilha o mesmo envelope de topo:
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "remoteJid": "5511977248677@s.whatsapp.net",
+  "sender": "5516998892221@s.whatsapp.net",
+  "data": { }
+}
+```
+
+| Campo | Tipo | Descrição |
+| :--- | :--- | :--- |
+| `event` | string | Nome do evento (veja o catálogo abaixo). |
+| `connectionId` | string (uuid) | A conexão que produziu o evento. |
+| `remoteJid` | string | O JID da conversa (contato ou grupo), ex.: `5511999999999@s.whatsapp.net`. |
+| `sender` | string | O JID do dono da conexão. |
+| `data` | object | Payload específico do evento. |
+
+## Catálogo de eventos
+
+Estes são os eventos que você pode assinar:
+
+| Evento | Quando |
+| :--- | :--- |
+| `messages.upsert` | Uma mensagem foi **recebida** (ou surgiu uma nova mensagem de saída). |
+| `send.message` | Uma mensagem foi **enviada pela API** (saída, `fromMe: true`). |
+| `messages.update` | O **status** de uma mensagem mudou (enviada → entregue → lida). |
+| `messages.edited` | Uma mensagem foi **editada ou revogada**. |
+| `messages.delete` | Uma mensagem foi **apagada**. |
+| `presence.update` | Um contato começou/parou de **digitar/gravar** ou mudou o estado online. |
+| `connection.update` | O **estado** da conexão mudou (open / connecting / close). |
+
+<Callout icon="circle-info">
+  Todos os eventos são requisições `POST` com `Content-Type: application/json`. Responda com qualquer status
+  `2xx`/`3xx` para confirmar; não-2xx (ou timeout) dispara uma nova tentativa.
+</Callout>
+
+## `send.message` — mensagem de saída
+
+Emitido quando sua integração envia uma mensagem. `data.message` espelha o nó da mensagem do WhatsApp.
+
+```json
+{
+  "event": "send.message",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "remoteJid": "5511977248677@s.whatsapp.net",
+  "sender": "5516998892221@s.whatsapp.net",
+  "data": {
+    "key": {
+      "remoteJid": "5511977248677@s.whatsapp.net",
+      "fromMe": true,
+      "id": "3EB00E70590F8C9031F253560E0E71BB9C2AB934"
+    },
+    "pushName": "Você",
+    "status": "PENDING",
+    "message": { "conversation": "🔐 Seu código é 066637" },
+    "messageType": "conversation",
+    "source": "api"
+  }
+}
+```
+
+## `messages.upsert` — mensagem recebida
+
+`data.key.fromMe` é `false` para mensagens recebidas. `data.message` contém exatamente um nó de tipo de mensagem.
+
+### Texto
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "remoteJid": "558981287658@s.whatsapp.net",
+  "sender": "5516998892221@s.whatsapp.net",
+  "data": {
+    "key": { "remoteJid": "558981287658@s.whatsapp.net", "fromMe": false, "id": "AC2FC0..." },
+    "pushName": "Wally",
+    "status": "DELIVERY_ACK",
+    "message": { "conversation": "Olá, tudo bem? 👋" },
+    "messageType": "conversation",
+    "source": "android"
+  }
+}
+```
+
+### Áudio (mensagem de voz)
+
+O nó de mídia inclui `downloadMediaUrl` — um link assinado, pronto para uso, que baixa os bytes já
+descriptografados (veja [Baixando mídia](#baixando-m-dia)).
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "remoteJid": "558981287658@s.whatsapp.net",
+  "sender": "5516998892221@s.whatsapp.net",
+  "data": {
+    "key": { "remoteJid": "558981287658@s.whatsapp.net", "fromMe": false, "id": "AC964BA717BDB2F18EA7CA0CEC4AD5AA" },
+    "pushName": "Wally",
+    "status": "DELIVERY_ACK",
+    "message": {
+      "audioMessage": {
+        "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5ZWZmNmIi...J9/download?token=1783006995.cb8a7c0f...",
+        "url": "https://mmg.whatsapp.net/v/t62.7117-24/...enc",
+        "mimetype": "audio/ogg; codecs=opus",
+        "fileLength": 6361,
+        "seconds": 3,
+        "ptt": false,
+        "directPath": "/v/t62.7117-24/...enc",
+        "mediaKeyTimestamp": 1782402038
+      }
+    },
+    "messageType": "audioMessage",
+    "source": "android"
+  }
+}
+```
+
+### Imagem
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "remoteJid": "558981287658@s.whatsapp.net",
+  "sender": "5516998892221@s.whatsapp.net",
+  "data": {
+    "key": { "remoteJid": "558981287658@s.whatsapp.net", "fromMe": false, "id": "ACCF5AFDFBCDA9C91FC4E259CED20476" },
+    "pushName": "Wally",
+    "status": "DELIVERY_ACK",
+    "message": {
+      "imageMessage": {
+        "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5ZWZmNmIi...J9/download?token=1783006995.a4539136...",
+        "url": "https://mmg.whatsapp.net/v/t62.7118-24/...enc",
+        "mimetype": "image/jpeg",
+        "fileLength": 85618,
+        "height": 955,
+        "width": 1080,
+        "directPath": "/v/t62.7118-24/...enc",
+        "mediaKeyTimestamp": 1782401808
+      }
+    },
+    "messageType": "imageMessage",
+    "source": "android"
+  }
+}
+```
+
+### Vídeo
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "remoteJid": "558981287658@s.whatsapp.net",
+  "sender": "5516998892221@s.whatsapp.net",
+  "data": {
+    "key": { "remoteJid": "558981287658@s.whatsapp.net", "fromMe": false, "id": "ACDAB163D8160F57C9E760DFB262622F" },
+    "pushName": "Wally",
+    "status": "DELIVERY_ACK",
+    "message": {
+      "videoMessage": {
+        "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5ZWZmNmIi...J9/download?token=1783006995.e32cdbc4...",
+        "url": "https://mmg.whatsapp.net/v/t62.7161-24/...enc",
+        "mimetype": "video/mp4",
+        "fileLength": 19453797,
+        "seconds": 106,
+        "height": 864,
+        "width": 480,
+        "directPath": "/v/t62.7161-24/...enc",
+        "mediaKeyTimestamp": 1782402086
+      }
+    },
+    "messageType": "videoMessage",
+    "source": "android"
+  }
+}
+```
+
+### Documento
+
+```json
+{
+  "message": {
+    "documentMessage": {
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/.../download?token=...",
+      "url": "https://mmg.whatsapp.net/...enc",
+      "mimetype": "application/pdf",
+      "fileName": "fatura.pdf",
+      "fileLength": 234112,
+      "pageCount": 3,
+      "directPath": "/v/...enc",
+      "mediaKeyTimestamp": 1782402086
+    }
+  },
+  "messageType": "documentMessage"
+}
+```
+
+### Outros tipos de mensagem recebida
+
+| `messageType` | Nó | Campos notáveis |
+| :--- | :--- | :--- |
+| `conversation` | `conversation` | Texto simples (string). |
+| `extendedTextMessage` | `extendedTextMessage` | `text`, prévia de link (`title`, `description`, `matchedText`) e `contextInfo` para respostas. |
+| `imageMessage` | `imageMessage` | `mimetype`, `caption?`, `width`, `height`, `fileLength`, `downloadMediaUrl`. |
+| `videoMessage` | `videoMessage` | `seconds`, `width`, `height`, `caption?`, `downloadMediaUrl`. |
+| `audioMessage` | `audioMessage` | `seconds`, `ptt` (true = mensagem de voz), `downloadMediaUrl`. |
+| `documentMessage` | `documentMessage` | `fileName`, `pageCount?`, `caption?`, `downloadMediaUrl`. |
+| `stickerMessage` | `stickerMessage` | `mimetype` (`image/webp`), `isAnimated`, `downloadMediaUrl`. |
+| `reactionMessage` | `reactionMessage` | `text` (o emoji) e `key.id` (a mensagem reagida). |
+
+## Status, edições, exclusões e presença
+
+### `messages.update`
+
+```json
+{
+  "event": "messages.update",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "data": {
+    "keyId": "3EB00E70590F8C9031F253560E0E71BB9C2AB934",
+    "remoteJid": "5511977248677@s.whatsapp.net",
+    "fromMe": true,
+    "status": "READ"
+  }
+}
+```
+
+### `messages.edited`
+
+```json
+{
+  "event": "messages.edited",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "data": {
+    "key": { "remoteJid": "558981287658@s.whatsapp.net", "fromMe": false, "id": "AC2FC0..." },
+    "type": "REVOKE"
+  }
+}
+```
+
+### `messages.delete`
+
+```json
+{
+  "event": "messages.delete",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "data": { "remoteJid": "558981287658@s.whatsapp.net", "fromMe": false, "id": "AC2FC0..." }
+}
+```
+
+### `presence.update`
+
+```json
+{
+  "event": "presence.update",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "data": {
+    "id": "558981287658@s.whatsapp.net",
+    "presences": {
+      "558981287658@s.whatsapp.net": { "lastKnownPresence": "composing" }
+    }
+  }
+}
+```
+
+### `connection.update`
+
+```json
+{
+  "event": "connection.update",
+  "connectionId": "019eff6b-75cd-7b00-8494-a1b6a7b8da5d",
+  "data": { "state": "open", "statusReason": 200, "wuid": "5516998892221@s.whatsapp.net", "profileName": "Pingo" }
+}
+```
+
+## Tabelas de referência
+
+### `source`
+
+Origem da mensagem: `api`, `android`, `ios`, `web`.
+
+### `status`
+
+Ciclo de entrega: `PENDING` → `SERVER_ACK` → `DELIVERY_ACK` → `READ` (mensagens recebidas normalmente chegam
+como `DELIVERY_ACK`).
+
+## Baixando mídia
+
+Nós de mídia (`imageMessage`, `videoMessage`, `audioMessage`, `documentMessage`, `stickerMessage`) incluem um
+**`downloadMediaUrl`**. Ele aponta para uma rota pública, protegida por token, que retorna os bytes
+**descriptografados** — você não precisa descriptografar o payload `.enc` do WhatsApp:
+
+```
+GET https://api.pingonotify.com/v3/connections/media/{mediaId}/download?token={token}
+```
+
+- O `token` é uma credencial assinada e com prazo, embutida na URL — basta seguir o link.
+- A resposta entrega o arquivo bruto com o `Content-Type` correto.
+- Os links valem por **7 dias**; rotacionar o segredo da plataforma invalida os links emitidos anteriormente.
+
+<Warning>
+  Trate `downloadMediaUrl` como sensível — qualquer pessoa com o link pode baixar o arquivo até ele expirar.
+</Warning>
+
+## Verificando a autenticidade (HMAC)
+
+Quando você habilita HMAC em uma assinatura de webhook (`hmacEnabled: true`), toda entrega inclui dois headers:
+
+| Header | Exemplo |
+| :--- | :--- |
+| `X-Pingo-Signature-256` | `sha256=9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08` |
+| `X-Pingo-Timestamp` | `1783006995` |
+
+A assinatura é calculada sobre o **timestamp + o corpo bruto da requisição**:
+
+```
+signature = HMAC_SHA256( secret, `${timestamp}.${rawBody}` )
+X-Pingo-Signature-256 = "sha256=" + hex(signature)
+```
+
+Recupere ou rotacione o segredo de assinatura com
+`GET /v3/webhooks/{id}/secret` e `POST /v3/webhooks/{id}/secret/rotate`.
+
+### Exemplo de verificação (Node.js)
+
+```js
+import { createHmac, timingSafeEqual } from 'node:crypto';
+
+function verify(req, secret) {
+  const signature = req.headers['x-pingo-signature-256'];   // "sha256=..."
+  const timestamp = req.headers['x-pingo-timestamp'];       // "1783006995"
+
+  // 1) Rejeite entregas antigas (proteção contra replay)
+  const now = Math.floor(Date.now() / 1000);
+  if (Math.abs(now - Number(timestamp)) > 300) return false; // janela de 5 min
+
+  // 2) Recalcule a assinatura sobre `${timestamp}.${rawBody}`
+  const expected = 'sha256=' + createHmac('sha256', secret)
+    .update(`${timestamp}.${req.rawBody}`)   // rawBody deve ser os bytes exatos recebidos
+    .digest('hex');
+
+  // 3) Comparação em tempo constante
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+```
+
+<Info>
+  Use o corpo **bruto** da requisição (bytes exatos), não um objeto re-serializado — re-serializar pode reordenar
+  chaves e quebrar a assinatura.
+</Info>
+
+## Entrega e novas tentativas
+
+- As entregas passam por uma fila em background com **3 tentativas** e backoff exponencial.
+- Qualquer resposta `2xx`/`3xx` é sucesso; `4xx`/`5xx` ou timeout de rede (10s) dispara uma nova tentativa.
+- O **agrupamento de mensagens** opcional junta várias mensagens da mesma conversa em menos entregas.
+- A **simulação de digitação** opcional emite `presence.update` (`composing`) enquanto as mensagens agrupadas
+  aguardam na fila.

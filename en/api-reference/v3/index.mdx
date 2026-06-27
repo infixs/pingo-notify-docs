@@ -1,0 +1,50 @@
+---
+title: "Pingo Notify API v3"
+description: "Connect WhatsApp, send and receive messages, manage workspaces, and run a full multi-agent Helpdesk."
+icon: "sparkles"
+---
+
+The **v3 API** is the current generation of the Pingo Notify REST API. It covers everything from a single
+WhatsApp connection to a complete, multi-agent Helpdesk.
+
+<Info>
+  Base URL: `https://api.pingonotify.com`
+</Info>
+
+## What's new in v3
+
+- **Workspaces (accounts).** Every resource lives inside a workspace. Switch the active workspace per request
+  with the optional `X-Account-Id` header — no need for separate credentials per workspace.
+- **Recipient in the body.** Chat endpoints no longer put the phone number in the URL. The destination
+  (`to` / `remoteJid`) travels in the request **body** (or query, for the history `GET`). The connection id stays
+  in the path (`:id`).
+- **Helpdesk.** A full ticketing layer: conversations, contacts, inboxes, teams, labels, SLA, reports, CSAT,
+  canned responses, agent bots and notifications.
+- **Official + unofficial WhatsApp.** The same surface drives both the official WhatsApp Cloud API and the
+  unofficial connection (via Evolution).
+
+## Authentication
+
+All authenticated requests carry an **API token** in the `apikey` header:
+
+```bash
+curl https://api.pingonotify.com/v3/connections \
+  --header 'apikey: sk_live_<YOUR_TOKEN>'
+```
+
+See [Authentication](/en/api-reference/v3/authentication) to create a token and select a workspace.
+
+## Receiving events
+
+Pingo Notify pushes real-time WhatsApp events (incoming messages, status updates, presence, connection changes)
+to your own URL. See [Webhooks](/en/api-reference/v3/webhooks) for the event catalog, payload shapes, media
+download and HMAC signature verification.
+
+<CardGroup cols={2}>
+  <Card title="Send your first message" icon="paper-plane" href="/en/api-reference/v3/endpoints/messages/connections_chats_messages_send">
+    Send text and media to a WhatsApp number.
+  </Card>
+  <Card title="Webhooks" icon="bolt" href="/en/api-reference/v3/webhooks">
+    Receive incoming messages and events in real time.
+  </Card>
+</CardGroup>

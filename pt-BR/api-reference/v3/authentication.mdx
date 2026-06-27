@@ -1,0 +1,69 @@
+---
+title: "Autenticação"
+description: "Autentique requisições v3 com um API token e selecione o workspace ativo."
+icon: "key"
+---
+
+A API v3 autentica com um **API token** enviado no header `apikey`. Os tokens são vinculados a um workspace e a
+um usuário, e carregam as mesmas permissões desse membro.
+
+## Formato do API token
+
+| Prefixo | Modo |
+| :--- | :--- |
+| `sk_live_…` | Tráfego de produção (live) |
+| `sk_test_…` | Modo de teste |
+
+O token completo é exibido **apenas uma vez**, no momento da criação. Guarde-o com segurança.
+
+## Criar um token
+
+Você pode criar tokens pelo dashboard ou via API:
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/api-tokens \
+  --header 'apikey: sk_live_<YOUR_TOKEN>' \
+  --header 'Content-Type: application/json' \
+  --data '{ "name": "Integração backend" }'
+```
+
+A resposta inclui o `token` em texto puro uma única vez. Chamadas seguintes retornam apenas uma prévia
+mascarada (`tokenLast4`).
+
+## Usar o token
+
+Envie-o no header `apikey` em todas as requisições:
+
+```bash
+curl https://api.pingonotify.com/v3/connections \
+  --header 'apikey: sk_live_<YOUR_TOKEN>'
+```
+
+## Selecionar um workspace — `X-Account-Id`
+
+Todo recurso pertence a um **workspace** (conta). Sem nenhum header, é usado o workspace padrão/pessoal do token.
+Para atuar em um workspace específico, adicione o header opcional `X-Account-Id`:
+
+```bash
+curl https://api.pingonotify.com/v3/helpdesk/conversations \
+  --header 'apikey: sk_live_<YOUR_TOKEN>' \
+  --header 'X-Account-Id: 7c3f1e90-7d4a-4b0a-9b6e-2b6f0a1c2d3e'
+```
+
+<Warning>
+  Um workspace ao qual o token não pertence retorna `403 Forbidden`. Liste os workspaces que um token alcança
+  com `GET /v3/accounts`.
+</Warning>
+
+## Erros
+
+| Status | Significado |
+| :--- | :--- |
+| `401` | `apikey` ausente, inválido ou expirado. |
+| `403` | O token não pode acessar o workspace solicitado (`X-Account-Id`). |
+
+## Segurança — boas práticas
+
+- Nunca versione tokens no controle de código. Use variáveis de ambiente ou um cofre de segredos.
+- Use `sk_test_…` em ambientes que não são de produção.
+- Rotacione e revogue tokens não utilizados (`DELETE /v3/api-tokens/{id}`).
