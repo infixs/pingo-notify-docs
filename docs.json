@@ -14,6 +14,61 @@
         "language": "en",
         "versions": [
           {
+            "version": "v3",
+            "tabs": [
+              {
+                "tab": "Documentation",
+                "icon": "book",
+                "groups": [
+                  {
+                    "group": "Getting Started",
+                    "pages": ["en/index", "en/official-whatsapp-api"]
+                  },
+                  {
+                    "group": "Features",
+                    "pages": [
+                      "en/connections",
+                      "en/integrations",
+                      "en/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "WordPress Plugin",
+                    "pages": [
+                      "en/plugin-wordpress",
+                      "en/template-plugins",
+                      "en/hooks-and-development"
+                    ]
+                  },
+                  {
+                    "group": "Authentication",
+                    "pages": ["en/apikeys"]
+                  }
+                ]
+              },
+              {
+                "tab": "API Reference",
+                "icon": "signs-post",
+                "groups": [
+                  {
+                    "group": "API Documentation",
+                    "pages": [
+                      "en/api-reference/v3/index",
+                      "en/api-reference/v3/authentication",
+                      "en/api-reference/v3/conventions",
+                      "en/api-reference/v3/webhooks",
+                      "en/api-reference/v3/realtime"
+                    ]
+                  },
+                  {
+                    "group": "Endpoints",
+                    "openapi": "./en/api-reference/v3/openapi.json"
+                  }
+                ]
+              }
+            ]
+          },
+          {
             "version": "v2",
             "tabs": [
               {
@@ -110,6 +165,61 @@
       {
         "language": "pt-BR",
         "versions": [
+          {
+            "version": "v3",
+            "tabs": [
+              {
+                "tab": "Documentação",
+                "icon": "book",
+                "groups": [
+                  {
+                    "group": "Começando",
+                    "pages": ["pt-BR/index", "pt-BR/official-whatsapp-api"]
+                  },
+                  {
+                    "group": "Recursos",
+                    "pages": [
+                      "pt-BR/connections",
+                      "pt-BR/integrations",
+                      "pt-BR/webhooks"
+                    ]
+                  },
+                  {
+                    "group": "WordPress Plugin",
+                    "pages": [
+                      "pt-BR/plugin-wordpress",
+                      "pt-BR/template-plugins",
+                      "pt-BR/hooks-and-development"
+                    ]
+                  },
+                  {
+                    "group": "Autenticação",
+                    "pages": ["pt-BR/apikeys"]
+                  }
+                ]
+              },
+              {
+                "tab": "Referência da API",
+                "icon": "signs-post",
+                "groups": [
+                  {
+                    "group": "Documentação da API",
+                    "pages": [
+                      "pt-BR/api-reference/v3/index",
+                      "pt-BR/api-reference/v3/authentication",
+                      "pt-BR/api-reference/v3/conventions",
+                      "pt-BR/api-reference/v3/webhooks",
+                      "pt-BR/api-reference/v3/realtime"
+                    ]
+                  },
+                  {
+                    "group": "Endpoints",
+                    "openapi": "./pt-BR/api-reference/v3/openapi.json"
+                  }
+                ]
+              }
+            ]
+          },
           {
             "version": "v2",
             "tabs": [

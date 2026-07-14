@@ -1,0 +1,123 @@
+---
+title: 'Conventions'
+description: 'Pagination, errors, ids and dates — the rules every v3 endpoint follows.'
+---
+
+## Pagination
+
+Most list endpoints take three query parameters and return the same envelope.
+
+```bash
+curl "https://api.pingonotify.com/v3/helpdesk/contacts?page=2&per_page=50&s=ana" \
+  -H "apikey: sk_live_..."
+```
+
+| Parameter | Default | Notes |
+|---|---|---|
+| `page` | `1` | 1-based. |
+| `per_page` | `10` | Capped at **100** on most endpoints. |
+| `s` | — | Free-text search. What it searches depends on the resource. |
+
+<Warning>
+The wire names are **`per_page`** and **`s`** — snake_case and short. Sending `perPage` or `search` does not fail; it is silently ignored and you get the defaults back. This trips people up, so check the parameter names on the endpoint page.
+</Warning>
+
+The envelope is always the same shape:
+
+```json
+{
+  "data": [ ... ],
+  "total": 137,
+  "totalPages": 3,
+  "currentPage": 2,
+  "perPage": 50
+}
+```
+
+### The exception: messages
+
+`GET /v3/helpdesk/conversations/{id}/messages` is **cursor**-paginated, because a conversation grows from the bottom while you read it and page numbers would shift under you.
+
+It returns a **bare array**, not an envelope, ordered **oldest first**. To walk backwards through history, pass the id of the oldest message you already hold:
+
+```bash
+curl "https://api.pingonotify.com/v3/helpdesk/conversations/{id}/messages?limit=30&cursor={oldestMessageId}" \
+  -H "apikey: sk_live_..."
+```
+
+You have reached the beginning of the conversation when you get back fewer messages than you asked for.
+
+## Errors
+
+There are two error shapes, and which one you get depends on where the failure happened.
+
+**Validation and permission failures** use the standard shape:
+
+```json
+{
+  "statusCode": 400,
+  "message": ["name must be a string"],
+  "error": "Bad Request"
+}
+```
+
+Note that `message` is an **array** for validation failures — one entry per broken rule — and a plain string otherwise.
+
+**Business failures** use a coded shape, with a stable machine-readable code and a message localized to your account country:
+
+```json
+{
+  "message": "CONNECTION_NOT_FOUND",
+  "hint": "Connection not found."
+}
+```
+
+Branch on `message`, never on `hint` — the hint is written for humans and its wording will change.
+
+### Status codes
+
+| Code | What it means |
+|---|---|
+| `200` | Success. |
+| `201` | Created. Every `POST` returns this unless noted otherwise. |
+| `204` | Success, no body. Most `DELETE`s. |
+| `400` | Your request was malformed, or a business rule rejected it. |
+| `401` | Your `apikey` is missing, wrong, or revoked. |
+| `403` | Your role does not allow this, or your plan does not include it. |
+| `404` | It does not exist — **or you cannot see it**. See below. |
+| `409` | It collides with something that already exists. |
+| `422` | The WhatsApp 24-hour window is closed. Send a template. |
+
+### Why you get a 404 instead of a 403
+
+When an Agent asks for a conversation in an inbox they do not belong to, the API answers **404**, not 403.
+
+That is deliberate. A 403 would confirm the conversation exists, which leaks information to someone who should not know. The same rule applies to any resource outside your access scope: it is reported as absent, not as forbidden.
+
+So a 404 means *"not visible to you"*, which is a slightly broader statement than *"not there"*.
+
+## Ids
+
+Every id is a **UUID**. Most are UUID v7, so they sort chronologically — but do not depend on that; treat them as opaque strings.
+
+The one id that is *not* a UUID is a **conversation's `displayId`**: a small integer, sequential per workspace, that exists so your agents can say "ticket 214" out loud. It is not accepted anywhere as a path parameter.
+
+## Dates
+
+Every timestamp in and out is **ISO 8601 in UTC**:
+
+```
+2026-07-14T12:34:56.000Z
+```
+
+Report ranges are inclusive on both ends. Where a report buckets by day, the buckets are UTC days.
+
+The one place a timezone matters is an **inbox**: its `timezone` (an IANA name such as `America/Sao_Paulo`) is what working hours, out-of-office replies and business-hours SLAs are measured against.
+
+## Rate limits and metering
+
+There is no request-per-second rate limit on the API.
+
+What *is* metered is **messages**. Every message you send consumes one credit from your plan, and campaigns reserve credits for the whole audience up front — if your plan cannot cover every recipient, the campaign is not created at all. Cancelling a campaign refunds the credits for recipients that were never sent.
+
+Check your remaining headroom with `GET /v3/summary`.

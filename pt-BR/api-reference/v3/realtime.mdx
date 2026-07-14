@@ -1,0 +1,138 @@
+---
+title: 'Tempo real'
+description: 'O websocket por trás da caixa compartilhada: conversas ao vivo, digitação e presença.'
+---
+
+O helpdesk empurra cada mudança por um websocket, então você nunca precisa fazer polling. É uma conexão [Socket.IO](https://socket.io) padrão.
+
+| | |
+|---|---|
+| **Namespace** | `/helpdesk` |
+| **Path** | `/ws` |
+
+## Conectando
+
+Autentique com o seu token de API no parâmetro de query `apikey`. O workspace vem do token, então não há mais nada a enviar:
+
+```js
+import { io } from 'socket.io-client';
+
+const socket = io('https://api.pingonotify.com/helpdesk', {
+  path: '/ws',
+  query: { apikey: 'sk_live_...' },
+});
+
+socket.on('connect', () => console.log('conectado'));
+socket.on('connect_error', (err) => console.error(err.message)); // "unauthorized"
+```
+
+Um token inválido ou revogado não fecha o socket — ele falha o namespace com um `connect_error` cuja mensagem é `unauthorized`.
+
+## O que você recebe
+
+Você é inscrito automaticamente em tudo que pode ver: os eventos do seu próprio usuário, a presença do seu workspace, e toda caixa de entrada da qual você é membro. Managers e acima recebem todas as caixas do workspace.
+
+**O nome do evento é o tipo do evento, e o payload é o próprio objeto do evento** — os mesmos eventos que os [webhooks do helpdesk](/pt-BR/api-reference/v3/webhooks) entregam:
+
+```js
+socket.on('helpdesk.message.created', (evento) => {
+  // evento.conversationId, evento.inboxId, evento.message, ...
+  adicionarNaLinhaDoTempo(evento.message);
+});
+
+socket.on('helpdesk.conversation.assignee_changed', (evento) => {
+  // evento.fromAssigneeUserId, evento.toAssigneeUserId, ...
+});
+```
+
+Todo evento listado nos [webhooks do helpdesk](/pt-BR/api-reference/v3/webhooks#os-eventos) chega aqui, com uma exceção: **`helpdesk.sla.missed` não é transmitido pelo websocket.** Ele chega no seu webhook e cria uma notificação no app, mas nenhum evento de socket dispara para ele.
+
+As mensagens chegam completas — no mesmo formato que a API REST devolve — então você consegue renderizar uma mensagem recebida sem uma requisição adicional.
+
+## Acompanhando uma conversa
+
+Abrir uma conversa significa entrar na sala dela. Faça isso explicitamente, e saia ao fechar:
+
+```js
+socket.emit('subscribe:conversation', { conversationId }, (ack) => {
+  // { ok: true }
+});
+
+// depois
+socket.emit('unsubscribe:conversation', { conversationId });
+```
+
+Inscrever-se em uma conversa que você não pode ver falha com `conversation not found` — a mesma resposta de uma que não existe.
+
+## Digitação e confirmação de leitura
+
+Estes são retransmitidos entre agentes, para que a sua equipe se veja trabalhando. Eles não são enviados ao contato.
+
+```js
+socket.emit('typing:start', { conversationId });
+socket.emit('typing:stop',  { conversationId });
+
+socket.emit('read:up_to', { conversationId, messageId });
+```
+
+E do lado de quem recebe:
+
+```js
+socket.on('typing:start', ({ conversationId, userId }) => { /* ... */ });
+socket.on('typing:stop',  ({ conversationId, userId }) => { /* ... */ });
+socket.on('read:up_to',   ({ conversationId, userId, messageId }) => { /* ... */ });
+```
+
+Você nunca recebe de volta os seus próprios eventos de digitação.
+
+## Presença
+
+Presença é um heartbeat. Envie um a cada **20 segundos** enquanto o agente estiver ativo:
+
+```js
+setInterval(() => socket.emit('presence:online'), 20_000);
+```
+
+Pare de enviar e o agente decai para offline sozinho — um recarregamento de página ou uma queda breve não o fazem piscar para offline, que é exatamente o que você quer.
+
+O retrato do workspace chega na conexão e de novo sempre que o status de alguém muda:
+
+```js
+socket.on('presence.update', ({ users }) => {
+  // { "0195f3a0-...": "online", "0195f3b1-...": "busy", ... }
+});
+```
+
+Um agente está `online`, `busy` ou `offline`. Ele mesmo define isso com `PATCH /v3/helpdesk/profile/availability`.
+
+<Note>
+Presença não é enfeite. **Apenas agentes `online` recebem atribuição automática por rodízio** — agentes `busy` e `offline` são pulados, e se ninguém estiver online a conversa simplesmente fica sem dono. Se a sua integração controla a presença, é esta a alavanca que decide se o trabalho é distribuído.
+</Note>
+
+## Um exemplo completo
+
+Mantendo uma lista de conversas viva, de ponta a ponta:
+
+```js
+const socket = io('https://api.pingonotify.com/helpdesk', {
+  path: '/ws',
+  query: { apikey: process.env.PINGO_TOKEN },
+});
+
+// Chegou uma conversa nova em uma das minhas caixas.
+socket.on('helpdesk.conversation.created', (e) => lista.inserirNoTopo(e.conversationId));
+
+// A prévia dela mudou.
+socket.on('helpdesk.message.created', (e) => lista.atualizarPrevia(e.conversationId, e.message));
+
+// Alguém resolveu, ou ela mudou de dono.
+socket.on('helpdesk.conversation.status_changed',   (e) => lista.definirStatus(e.conversationId, e.toStatus));
+socket.on('helpdesk.conversation.assignee_changed', (e) => lista.definirDono(e.conversationId, e.toAssigneeUserId));
+
+// Uma mensagem que enviei foi entregue ou falhou.
+socket.on('helpdesk.message.status_changed', (e) => {
+  linhaDoTempo.definirStatus(e.messageId, e.toStatus, e.externalError);
+});
+```
+
+Repare no último. Quando você envia uma mensagem, a chamada REST retorna na hora com `status: PENDING` — a entrega acontece de forma assíncrona. `helpdesk.message.status_changed` é como você fica sabendo que ela virou `SENT`, `DELIVERED`, `READ` ou `FAILED` (e nesse caso `externalError` diz o porquê).
