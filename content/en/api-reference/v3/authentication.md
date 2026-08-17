@@ -1,0 +1,127 @@
+---
+title: 'Authentication'
+description: 'How a v3 request proves who it is, and which workspace it acts on.'
+icon: 'key'
+---
+
+Every v3 request carries two things: **who you are** (an API token) and **which workspace you are acting on** (a header, or your token's default).
+
+## Your API token
+
+Send the token in the **`apikey`** header, verbatim, including its `sk_live_` prefix.
+
+```bash
+curl https://api.pingonotify.com/v3/connections \
+  -H "apikey: sk_live_a1b2c3d4e5f6..."
+```
+
+::warning
+For endpoints protected by an API token, use the **`apikey`** header — not `Authorization: Bearer`. A bearer header is ignored on those endpoints, and the request fails with `401`.
+::
+
+### Creating a token
+
+Create tokens from the dashboard, or with the API itself:
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/api-tokens \
+  -H "apikey: sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "Production server" }'
+```
+
+```json
+{
+  "id": "0195f3a0-...",
+  "name": "Production server",
+  "token": "sk_live_xF3k9...",
+  "prefix": "sk_live",
+  "tokenLast4": "9f2a"
+}
+```
+
+::warning
+**The `token` field appears exactly once — in this response.** Pingo stores only a hash of it, so it can never be shown again. Save it now.
+::
+
+If you lose a token, rotate it (`PATCH /v3/api-tokens/{id}` with `refreshToken: true`) — the old secret stops working the moment the new one is issued. Deleting a token (`DELETE /v3/api-tokens/{id}`) revokes it immediately.
+
+Only an **Owner** or **Admin** can create, rotate or delete tokens.
+
+### What a token can do
+
+A token carries no scopes of its own. It inherits the permissions of the user who created it, in the workspace it belongs to. A token created by an Owner can do everything an Owner can do — including billing and deleting the workspace.
+
+Treat a token as the credential of a person, not of an integration. Create it under an account whose role matches what the integration actually needs.
+
+## Choosing the workspace
+
+Your token belongs to one workspace, and that is the workspace a request runs against when you say nothing.
+
+To act on a **different** workspace you belong to, send its id in the `X-Account-Id` header:
+
+```bash
+curl https://api.pingonotify.com/v3/helpdesk/conversations \
+  -H "apikey: sk_live_..." \
+  -H "X-Account-Id: 0195f3a0-1234-7890-abcd-ef0123456789"
+```
+
+List the workspaces available to you with `GET /v3/accounts`. Pointing `X-Account-Id` at a workspace you are not a member of returns **403**.
+
+## Roles and permissions
+
+Every member of a workspace holds one or more roles, and the role decides what the API will let the request do. A denied action returns **403 `Insufficient account permissions`**.
+
+| | Owner | Admin | Manager | Agent |
+|---|:---:|:---:|:---:|:---:|
+| Read the workspace | ✅ | ✅ | ✅ | ✅ |
+| Update the workspace | ✅ | — | — | — |
+| Delete or transfer the workspace | ✅ | — | — | — |
+| Members | ✅ | ✅ | ✅ | read |
+| Connections, integrations, webhooks | ✅ | ✅ | ✅ | — |
+| Send messages and campaigns | ✅ | ✅ | ✅ | — |
+| Read messages on a connection | ✅ | ✅ | — | — |
+| API tokens and OAuth apps | ✅ | ✅ | — | — |
+| Billing | ✅ | — | — | — |
+| Helpdesk — configure | ✅ | ✅ | ✅ | — |
+| Helpdesk — reply, assign, label | ✅ | ✅ | ✅ | ✅ |
+| Helpdesk — reports | ✅ | ✅ | ✅ | — |
+| Helpdesk — AI configuration | ✅ | ✅ | read | read |
+
+Two rules are worth knowing before you design an integration around a role:
+
+- **You can never grant a role at or above your own.** A Manager can invite an Agent, but not another Manager.
+- **An Agent only sees the inboxes they belong to.** A conversation in an inbox they are not a member of is not forbidden to them — it simply does not exist as far as the API is concerned, and returns **404**. This is deliberate: a 403 would confirm the conversation exists.
+
+## Plan requirements
+
+Some endpoints need more than a role.
+
+**The helpdesk is a PRO feature for writing.** Any member of any plan can *read* the helpdesk, but creating, replying, assigning or configuring requires the PRO plan. Without it, those endpoints return:
+
+```json
+{
+  "message": "HELPDESK_PLAN_REQUIRED",
+  "hint": "The helpdesk is available on the PRO plan."
+}
+```
+
+**Official WhatsApp connections and official campaigns require a paid plan**, and both connections and messages are metered against your plan limits. When a limit is reached you get a **403** with a code like `USER_PLAN_EXCEEDED_CONNECTIONS` or `USER_PLAN_EXCEEDED_MESSAGES`. Check your headroom any time with `GET /v3/summary`.
+
+## Endpoints without `apikey`
+
+A handful of routes carry no `apikey`. Each one documents its own credential:
+
+| Endpoint | Who calls it | How it is authenticated |
+|---|---|---|
+| `POST /v3/connections/sync-session/complete` | The connection sync flow | A signed sync token in `Authorization: Bearer` |
+| `POST /v3/connections/sync-session/reconnect-complete` | The reconnection sync flow | A signed sync token in `Authorization: Bearer` |
+| `GET /v3/connections/media/{mediaId}/download` | Your webhook consumer | A signed `token`, valid for 7 days |
+| `GET /v3/helpdesk/messages/attachments/{id}/public/download` | Your webhook consumer, WhatsApp | A signed `token` |
+| `GET`/`POST /v3/webhooks/whatsapp/{connectionId}` | Meta | `GET`: verify token. `POST`: `x-hub-signature-256` when an app secret is configured; without one, no HMAC is required, and `metadata.phone_number_id` is cross-checked only when present |
+| `POST /webhooks/helpdesk/{inboxId}` | Your own app | `x-helpdesk-token` or `x-helpdesk-signature`; optional only when the inbox has `hmacMandatory: false` |
+| `GET`/`POST /public/helpdesk/csat/{conversationId}` | Your customer | The conversation id itself |
+
+::note
+The CSAT survey link has no token and no expiry — the conversation id in the URL is the only thing gating it. Anyone holding that link can view and submit the survey once.
+::

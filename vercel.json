@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run generate",
+  "outputDirectory": ".output/public",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/en/reference/v3/(.*)", "destination": "/en/reference/v3/index.html" },
+    { "source": "/en/reference/v2/(.*)", "destination": "/en/reference/v2/index.html" },
+    { "source": "/pt-BR/reference/v3/(.*)", "destination": "/pt-BR/reference/v3/index.html" },
+    { "source": "/pt-BR/reference/v2/(.*)", "destination": "/pt-BR/reference/v2/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/openapi/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    },
+    {
+      "source": "/_nuxt/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# Netlify / Cloudflare Pages rewrite rules.
+#
+# The Scalar reference is a client-rendered SPA: deep links such as
+# /en/reference/v3/tag/messages exist only in the browser, so every path under a
+# reference base has to be served by that base's index.html.
+
+/en/reference/v3/*      /en/reference/v3/index.html      200
+/en/reference/v2/*      /en/reference/v2/index.html      200
+/pt-BR/reference/v3/*   /pt-BR/reference/v3/index.html   200
+/pt-BR/reference/v2/*   /pt-BR/reference/v2/index.html   200

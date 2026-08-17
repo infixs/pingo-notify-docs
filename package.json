@@ -1,0 +1,36 @@
+{
+  "name": "pingo-notify-docs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pingo Notify documentation — Nuxt + Nuxt Content + Scalar API Reference",
+  "scripts": {
+    "dev": "npm run openapi && nuxt dev",
+    "build": "npm run openapi && nuxt build",
+    "generate": "npm run openapi && node scripts/check-content.mjs && nuxt generate",
+    "preview": "nuxt preview",
+    "openapi": "node scripts/build-openapi.ts",
+    "check:content": "node scripts/check-content.mjs",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.15.2",
+    "@nuxt/icon": "^2.5.0",
+    "@scalar/nuxt": "^0.6.63",
+    "nuxt": "^4.5.2",
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@iconify-json/fa6-brands": "^1.2.6",
+    "@iconify-json/fa6-solid": "^1.2.4",
+    "@iconify-json/lucide": "^1.2.123",
+    "@tailwindcss/typography": "^0.5.20",
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.0",
+    "vue-tsc": "^3.1.0"
+  },
+  "packageManager": "npm@11.16.0"
+}

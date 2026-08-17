@@ -1,0 +1,308 @@
+/*
+ * Scalar injects its own cascade layers. They have to be declared *before*
+ * Tailwind so the API reference keeps its styling next to our utilities.
+ * https://scalar.com/products/api-references/integrations/nuxt
+ */
+@layer scalar-base, scalar-theme, scalar-config, theme, base, components, utilities;
+
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------------
+ * Pingo Notify design tokens.
+ *
+ * Taken from the product (pingonotify.com) so the docs and the app read as one
+ * product: the same OKLCH ramp, the same violet primary, the same 0.65rem
+ * radius and the same system font stack. `--pn-*` holds the raw values and
+ * flips with the theme; `@theme inline` exposes them to Tailwind so utilities
+ * such as `bg-surface` follow the mode without a `dark:` variant.
+ * ------------------------------------------------------------------------- */
+:root {
+  --pn-background: oklch(100% 0 0);
+  --pn-foreground: oklch(14.1% 0.005 285.823);
+  --pn-surface: oklch(100% 0 0);
+  --pn-elevated: oklch(98.5% 0 0);
+  --pn-muted: oklch(96.7% 0.001 286.375);
+  --pn-muted-foreground: oklch(55.2% 0.016 285.938);
+  --pn-subtle-foreground: oklch(55% 0.014 286);
+  --pn-accent: oklch(96.7% 0.001 286.375);
+  --pn-accent-foreground: oklch(21% 0.006 285.885);
+  --pn-border: oklch(92% 0.004 286.32);
+
+  /* Brand — the product's `--primary`. */
+  --pn-brand: oklch(60.6% 0.25 292.717);
+  --pn-brand-hover: oklch(54% 0.24 292.717);
+  --pn-brand-foreground: oklch(96.9% 0.016 293.756);
+  /* Darkened for body-copy contrast: the flat brand is a fill, not a text colour. */
+  --pn-brand-text: oklch(48% 0.24 292.717);
+  --pn-brand-soft: oklch(96.5% 0.022 292.717);
+  --pn-brand-ring: oklch(60.6% 0.25 292.717);
+  /* Darkened again for the one case text sits *on* the fill: `--pn-brand` under
+   * `--pn-brand-foreground` is only 4.01:1. Fills, rings and tints keep `--pn-brand`. */
+  --pn-brand-solid: oklch(57% 0.25 292.717);
+
+  /* Status accents, straight from the product. */
+  --pn-success: oklch(60% 0.14 162);
+  --pn-warning: oklch(62% 0.16 64);
+  --pn-info: oklch(62% 0.15 235);
+  --pn-destructive: oklch(57.7% 0.245 27.325);
+  --pn-whatsapp: oklch(62% 0.16 145);
+  /* The logo mark green (#00E587). Lower than the product's own lightness because
+   * the literal value is outside sRGB and clips to #00fa95. */
+  --pn-logo: oklch(81% 0.198 155.5);
+
+  /* Scrim behind the mobile drawer. The alpha is part of the token — consumers
+   * write `bg-overlay`, never `bg-overlay/40`. */
+  --pn-overlay: oklch(0% 0 0 / 0.4);
+
+  /* The product's signature gradient: the logo green falling into violet, laid
+   * over the page as a soft glow. Consumers mix it down (the product uses 15%). */
+  --pn-background-start-gradient: oklch(91.041% 0.16575 147.139);
+  --pn-background-end-gradient: oklch(70.796% 0.18806 303.42);
+  --pn-background-gradient:
+    radial-gradient(40% 60% at 10% 10%, var(--pn-background-start-gradient), transparent),
+    radial-gradient(35% 55% at 90% 90%, var(--pn-background-end-gradient), transparent);
+  /* Also from the product: the gradient it runs through display headings. */
+  --pn-title-soft-gradient: linear-gradient(
+    135deg,
+    oklch(60% 0.25 286.99),
+    oklch(75% 0.08 292.71) 48%,
+    oklch(73% 0.3 325.87)
+  );
+
+  --docs-header-height: 4rem;
+  --docs-sidebar-width: 17rem;
+  --docs-toc-width: 15rem;
+  color-scheme: light;
+}
+
+.dark {
+  --pn-background: oklch(14.5% 0 0);
+  --pn-foreground: oklch(98.5% 0 0);
+  --pn-surface: oklch(20.5% 0 0);
+  --pn-elevated: oklch(20.5% 0 0);
+  --pn-muted: oklch(26.9% 0 0);
+  --pn-muted-foreground: oklch(70.8% 0 0);
+  --pn-subtle-foreground: oklch(60% 0 0);
+  --pn-accent: oklch(26.9% 0 0);
+  --pn-accent-foreground: oklch(98.5% 0 0);
+  --pn-border: oklch(100% 0 0 / 0.12);
+
+  --pn-brand: oklch(60.6% 0.25 292.717);
+  --pn-brand-hover: oklch(66% 0.23 292.717);
+  --pn-brand-foreground: oklch(98.5% 0 0);
+  --pn-brand-text: oklch(78% 0.15 293);
+  --pn-brand-soft: oklch(30% 0.09 292.717);
+  --pn-brand-ring: oklch(72% 0.19 293);
+  --pn-brand-solid: oklch(57% 0.25 292.717);
+
+  --pn-success: oklch(76% 0.16 163);
+  --pn-warning: oklch(80% 0.17 80);
+  --pn-info: oklch(78% 0.16 235);
+  --pn-destructive: oklch(70.4% 0.191 22.216);
+  --pn-whatsapp: oklch(80% 0.15 145);
+  --pn-logo: oklch(81% 0.198 155.5);
+
+  /* Deeper than light mode: 40% black over #0a0a0a barely separates the drawer. */
+  --pn-overlay: oklch(0% 0 0 / 0.65);
+
+  --pn-background-start-gradient: oklch(55% 0.22 285);
+  --pn-background-end-gradient: oklch(55% 0.2 335);
+  --pn-background-gradient:
+    radial-gradient(40% 60% at 10% 10%, var(--pn-background-start-gradient), transparent),
+    radial-gradient(35% 55% at 90% 90%, var(--pn-background-end-gradient), transparent);
+  --pn-title-soft-gradient: linear-gradient(
+    135deg,
+    oklch(60% 0.25 286.99),
+    oklch(75% 0.08 292.71) 48%,
+    oklch(73% 0.3 325.87)
+  );
+
+  color-scheme: dark;
+}
+
+/* The product's 0.65rem radius. Namespaced, because Tailwind v4 has no bare
+ * `--radius` key and drops it — which is why the shell used to round at the
+ * Tailwind default while Scalar rounded at 0.65rem. Not `inline`: the variable
+ * has to survive into the output for `--scalar-radius-lg` to match it. */
+@theme {
+  --radius-xl: 0.65rem;
+}
+
+@theme inline {
+  /* The stacks the product ships — no webfont, no layout shift. */
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+
+  --color-bg: var(--pn-background);
+  --color-fg: var(--pn-foreground);
+  --color-surface: var(--pn-surface);
+  --color-elevated: var(--pn-elevated);
+  --color-muted: var(--pn-muted);
+  --color-fg-muted: var(--pn-muted-foreground);
+  --color-fg-subtle: var(--pn-subtle-foreground);
+  --color-accent: var(--pn-accent);
+  --color-accent-fg: var(--pn-accent-foreground);
+  --color-line: var(--pn-border);
+
+  --color-brand: var(--pn-brand);
+  --color-brand-hover: var(--pn-brand-hover);
+  --color-brand-fg: var(--pn-brand-foreground);
+  --color-brand-text: var(--pn-brand-text);
+  --color-brand-soft: var(--pn-brand-soft);
+  --color-brand-ring: var(--pn-brand-ring);
+  --color-brand-solid: var(--pn-brand-solid);
+
+  --color-success: var(--pn-success);
+  --color-warning: var(--pn-warning);
+  --color-info: var(--pn-info);
+  --color-destructive: var(--pn-destructive);
+  --color-whatsapp: var(--pn-whatsapp);
+  --color-logo: var(--pn-logo);
+  --color-overlay: var(--pn-overlay);
+
+  /* The product's gradients, as `bg-*` images plus their endpoints as colours so
+   * a consumer can also drive `from-*`/`to-*` or mix them down. */
+  --color-gradient-start: var(--pn-background-start-gradient);
+  --color-gradient-end: var(--pn-background-end-gradient);
+  --background-image-page-glow: var(--pn-background-gradient);
+  --background-image-title-soft: var(--pn-title-soft-gradient);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--docs-header-height) + 1.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  @apply bg-bg text-fg-muted antialiased;
+}
+
+::selection {
+  background-color: var(--pn-brand-solid);
+  color: var(--pn-brand-foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--pn-brand-ring);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+ * Shiki dual theme — Nuxt Content emits both palettes as CSS variables.
+ * -------------------------------------------------------------------------- */
+.shiki,
+.shiki span {
+  color: var(--shiki-default);
+  background-color: var(--shiki-default-bg);
+  font-style: var(--shiki-default-font-style);
+  font-weight: var(--shiki-default-font-weight);
+  text-decoration: var(--shiki-default-text-decoration);
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
+  background-color: var(--shiki-dark-bg);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+/* --------------------------------------------------------------------------
+ * Prose
+ * -------------------------------------------------------------------------- */
+.docs-prose {
+  @apply prose max-w-none;
+
+  --tw-prose-body: var(--pn-muted-foreground);
+  --tw-prose-headings: var(--pn-foreground);
+  --tw-prose-lead: var(--pn-muted-foreground);
+  --tw-prose-links: var(--pn-brand-text);
+  --tw-prose-bold: var(--pn-foreground);
+  --tw-prose-counters: var(--pn-subtle-foreground);
+  --tw-prose-bullets: var(--pn-border);
+  --tw-prose-hr: var(--pn-border);
+  --tw-prose-quotes: var(--pn-foreground);
+  --tw-prose-quote-borders: var(--pn-border);
+  --tw-prose-captions: var(--pn-subtle-foreground);
+  --tw-prose-code: var(--pn-foreground);
+  --tw-prose-pre-code: var(--pn-foreground);
+  --tw-prose-pre-bg: var(--pn-muted);
+  --tw-prose-th-borders: var(--pn-border);
+  --tw-prose-td-borders: var(--pn-border);
+
+  @apply prose-headings:scroll-mt-24 prose-headings:font-semibold prose-headings:tracking-tight;
+  @apply prose-a:font-medium prose-a:no-underline hover:prose-a:underline;
+  @apply prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5;
+  @apply prose-code:font-normal prose-code:before:content-none prose-code:after:content-none;
+  @apply prose-th:text-left;
+  @apply prose-img:rounded-xl prose-img:border prose-img:border-line prose-img:shadow-sm;
+}
+
+/* Code blocks own their padding/background; undo the inline-code treatment. */
+.docs-prose pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+
+.docs-prose table {
+  @apply block w-full overflow-x-auto text-sm md:table;
+}
+
+/* Anchor links generated by Nuxt Content's renderer. A heading is wrapped in an
+ * <a>, which would otherwise pick up the prose link colour. The selectors are
+ * written out to outrank Tailwind Typography's own `a` rule. */
+.docs-prose h2 > a,
+.docs-prose h3 > a,
+.docs-prose h4 > a,
+.docs-prose h5 > a,
+.dark .docs-prose h2 > a,
+.dark .docs-prose h3 > a,
+.dark .docs-prose h4 > a,
+.dark .docs-prose h5 > a {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+ * Scrollbars
+ * -------------------------------------------------------------------------- */
+.docs-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pn-border) transparent;
+}
+
+.docs-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.docs-scroll::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-line;
+}
+
+/* --------------------------------------------------------------------------
+ * The Scalar reference is embedded in our layout: let it own the leftover
+ * viewport height below the sticky header.
+ * -------------------------------------------------------------------------- */
+.scalar-shell {
+  height: calc(100dvh - var(--docs-header-height));
+  overflow: hidden;
+}
+
+.scalar-shell > * {
+  height: 100%;
+}
