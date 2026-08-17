@@ -1,0 +1,978 @@
+---
+title: 'Webhooks'
+description: 'Receba eventos do WhatsApp e do helpdesk no seu servidor, e prove que vieram de nós.'
+icon: 'webhook'
+---
+
+O Pingo tem dois sistemas de webhook independentes. Eles resolvem problemas diferentes, e você pode usar um, outro ou ambos.
+
+- **Webhooks de conexão** entregam eventos do WhatsApp — uma mensagem chegou, saiu, foi editada, excluída ou mudou de status, ou um contato mudou de presença. É o que você quer para rodar a sua própria lógica em cima do WhatsApp.
+- **Webhooks do helpdesk** entregam eventos da caixa compartilhada — uma conversa foi atribuída, uma etiqueta foi adicionada, um SLA estourou. É o que você quer para sincronizar o helpdesk com outro sistema.
+
+## Webhooks de conexão
+
+Cadastre uma URL e escolha os eventos que te interessam:
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/webhooks \
+  -H "apikey: sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://exemplo.com/hooks/pingo",
+    "events": ["messages.upsert", "messages.update"],
+    "connections": ["0195f3a0-1234-7890-abcd-ef0123456789"],
+    "hmacEnabled": true
+  }'
+```
+
+Liste todas as conexões cujos eventos este webhook deve receber. Se `connections` for omitido, o webhook é criado sem vínculos com conexões e não recebe eventos até que elas sejam adicionadas com `PATCH /v3/webhooks/{id}`.
+
+### Os eventos
+
+Estes são os sete valores que `events` aceita:
+
+| Evento | Dispara quando |
+|---|---|
+| `messages.upsert` | **Chegou uma mensagem** de um contato. |
+| `send.message` | Em uma conexão **não oficial**, uma mensagem **saiu** — enviada pela API ou pelo próprio celular. |
+| `messages.update` | Um status de entrega mudou — enviada, entregue, lida. |
+| `messages.edited` | Uma mensagem foi editada. |
+| `messages.delete` | Uma mensagem foi apagada para todos. |
+| `presence.update` | Um contato ficou online ou começou a digitar. |
+| `connection.update` | A conexão mudou de estado. |
+
+::warning
+**`connection.update` é aceito na assinatura, mas hoje não entrega nada.** O disparo HTTP desse evento está desativado no servidor — ele atualiza o estado da conexão internamente e alimenta o painel em tempo real, mas nenhum `POST` sai para a sua URL. Não construa nada que dependa dele; para saber se uma conexão caiu, faça polling em `GET /v3/connections`.
+::
+
+### O envelope
+
+Todo evento chega no mesmo envelope. O que muda é o `data`:
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+  "remoteJid": "5511999998888@s.whatsapp.net",
+  "sender": "5511888887777@s.whatsapp.net",
+  "data": { }
+}
+```
+
+| Campo | O que é |
+|---|---|
+| `event` | O nome do evento — o mesmo que você assinou. |
+| `connectionId` | A conexão do Pingo que originou o evento. |
+| `remoteJid` | O **outro lado** da conversa: o contato, ou o grupo. |
+| `sender` | O número da **sua própria** conexão, como o provedor o reporta. |
+| `data` | O corpo do evento. |
+
+::note
+Em `messages.upsert` e `send.message` o `data` é montado por nós e tem forma fechada — exatamente as chaves abaixo, nada mais. Nos demais eventos o `data` é repassado **como veio do provedor**, então campos extras podem aparecer com o tempo; trate os documentados como o contrato e ignore o resto.
+::
+
+### Payloads por evento
+
+::::tabs
+  :::tab{title="messages.upsert"}
+  Uma mensagem **recebida**. É o evento que você mais vai usar.
+
+  O `data` tem sempre estas oito chaves, e `messageType` diz qual nó esperar dentro de `message`:
+
+  ```json
+  {
+    "key": {
+      "remoteJid": "5511999998888@s.whatsapp.net",
+      "fromMe": false,
+      "id": "3EB0C767D097E9ECB4A5"
+    },
+    "pushName": "Ana",
+    "status": "DELIVERY_ACK",
+    "messageType": "conversation",
+    "message": { "conversation": "Oi! Meu pedido já saiu?" },
+    "contextInfo": null,
+    "source": "android",
+    "isAiMessage": false
+  }
+  ```
+
+  | Campo | O que é |
+  |---|---|
+  | `key.id` | O **wamid** — o id da mensagem no WhatsApp. Use-o para deduplicar. |
+  | `key.fromMe` | `false` em mensagem recebida. |
+  | `pushName` | O nome que o contato escolheu exibir. |
+  | `status` | O ACK do provedor. Aqui é sempre `DELIVERY_ACK`. |
+  | `messageType` | Qual nó vem dentro de `message`. |
+  | `contextInfo` | Preenchido quando é uma resposta ou há menções; `null` no caso comum. |
+  | `source` | De onde o contato mandou: `android`, `ios`, `web`, `unknown`. |
+  | `isAiMessage` | `true` quando a IA nativa do WhatsApp Business respondeu sozinha — nesse caso vem também `aiMessageSource: "WHATSAPP_BUSINESS"`. |
+
+  Os payloads de `message`, por tipo, estão logo abaixo em [Tipos de mensagem](#tipos-de-mensagem).
+  :::
+
+  :::tab{title="send.message"}
+  Uma mensagem **enviada por uma conexão não oficial** — seja pela API, seja digitada no celular. Conexões oficiais não produzem este evento. O `data` tem exatamente o mesmo formato do `messages.upsert`, com duas diferenças que importam:
+
+  - `key.fromMe` é **`true`**.
+  - `status` é o ACK do envio (`PENDING`, `SERVER_ACK`…), não `DELIVERY_ACK`.
+
+  ```json
+  {
+    "event": "send.message",
+    "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+    "remoteJid": "5511999998888@s.whatsapp.net",
+    "sender": "5511888887777@s.whatsapp.net",
+    "data": {
+      "key": {
+        "remoteJid": "5511999998888@s.whatsapp.net",
+        "fromMe": true,
+        "id": "3EB0F1A2B3C4D5E6F708"
+      },
+      "pushName": "Loja Exemplo",
+      "status": "PENDING",
+      "messageType": "conversation",
+      "message": { "conversation": "Saiu para entrega hoje de manhã!" },
+      "contextInfo": null,
+      "source": "unknown",
+      "isAiMessage": false
+    }
+  }
+  ```
+
+  ::note
+  Assine `send.message` se você precisa registrar o que a sua própria equipe mandou. Se você só quer reagir a clientes, assine apenas `messages.upsert` — assinar os dois e não checar `fromMe` é o jeito clássico de criar um laço de resposta infinito.
+  ::
+  :::
+
+  :::tab{title="messages.update"}
+  O status de entrega de uma mensagem mudou. É assim que você sabe que a sua mensagem foi entregue ou lida.
+
+  ```json
+  {
+    "event": "messages.update",
+    "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+    "remoteJid": "5511999998888@s.whatsapp.net",
+    "sender": "5511888887777@s.whatsapp.net",
+    "data": {
+      "keyId": "3EB0F1A2B3C4D5E6F708",
+      "remoteJid": "5511999998888@s.whatsapp.net",
+      "fromMe": true,
+      "status": "READ"
+    }
+  }
+  ```
+
+  O `keyId` é o **wamid** da mensagem afetada — é a chave que amarra este evento à mensagem que você já tem. Os status seguem a escada `PENDING` → `SENT` → `DELIVERED` → `READ`, e chegam como eventos separados conforme o contato recebe e abre a conversa.
+  :::
+
+  :::tab{title="messages.edited"}
+  O contato editou uma mensagem que já tinha enviado.
+
+  ```json
+  {
+    "event": "messages.edited",
+    "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+    "remoteJid": "5511999998888@s.whatsapp.net",
+    "sender": "5511888887777@s.whatsapp.net",
+    "data": {
+      "key": {
+        "remoteJid": "5511999998888@s.whatsapp.net",
+        "fromMe": false,
+        "id": "3EB0C767D097E9ECB4A5"
+      }
+    }
+  }
+  ```
+
+  O `key.id` identifica a mensagem original. Este é um dos eventos repassados crus do provedor, então o conteúdo editado pode vir acompanhado — releia a mensagem pelo histórico se precisar do texto final com garantia.
+  :::
+
+  :::tab{title="messages.delete"}
+  Uma mensagem foi apagada para todos.
+
+  ```json
+  {
+    "event": "messages.delete",
+    "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+    "remoteJid": "5511999998888@s.whatsapp.net",
+    "sender": "5511888887777@s.whatsapp.net",
+    "data": {
+      "id": "3EB0C767D097E9ECB4A5",
+      "remoteJid": "5511999998888@s.whatsapp.net",
+      "fromMe": false
+    }
+  }
+  ```
+
+  Aqui o wamid vem em `data.id` — e não em `data.keyId` como no `messages.update`, nem em `data.key.id` como no `messages.edited`. Os três eventos nomeiam o mesmo campo de três jeitos diferentes; é uma herança do provedor.
+  :::
+
+  :::tab{title="presence.update"}
+  O contato ficou online ou começou a digitar.
+
+  ```json
+  {
+    "event": "presence.update",
+    "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+    "remoteJid": "5511999998888@s.whatsapp.net",
+    "sender": "5511888887777@s.whatsapp.net",
+    "data": {
+      "id": "5511999998888@s.whatsapp.net",
+      "presences": {
+        "5511999998888@s.whatsapp.net": { "lastKnownPresence": "composing" }
+      }
+    }
+  }
+  ```
+
+  `lastKnownPresence` é `composing` (digitando) ou `available` (online). O mapa `presences` é indexado por JID porque em um grupo ele traz vários participantes de uma vez.
+  :::
+::::
+
+### Tipos de mensagem
+
+Dentro de `messages.upsert` e `send.message`, o campo `messageType` diz qual nó vem em `message`. Cada aba abaixo mostra o `message` **exatamente como ele chega**.
+
+::::tabs
+  :::tab{title="Texto"}
+  `messageType: "conversation"` — o texto puro, sem nada em volta.
+
+  ```json
+  {
+    "conversation": "Oi! Meu pedido já saiu?"
+  }
+  ```
+  :::
+
+  :::tab{title="Texto com link"}
+  `messageType: "extendedTextMessage"` — quando o texto tem um link, o WhatsApp anexa a prévia da página e o nó muda de `conversation` para `extendedTextMessage`.
+
+  ```json
+  {
+    "extendedTextMessage": {
+      "text": "Achei este aqui: https://exemplo.com/produto/42",
+      "matchedText": "https://exemplo.com/produto/42",
+      "title": "Cadeira Ergonômica — Exemplo",
+      "description": "Apoio lombar ajustável, 12x sem juros."
+    }
+  }
+  ```
+
+  ::note
+  Se você só quer o texto da mensagem, leia `message.conversation ?? message.extendedTextMessage?.text`. **Uma mensagem de texto pode chegar em qualquer um dos dois nós** — depende de ter link, citação ou menção.
+  ::
+  :::
+
+  :::tab{title="Resposta (citação)"}
+  Quando o contato responde a uma mensagem, o texto vem em `extendedTextMessage` e o `contextInfo` — **na raiz do `data`**, não dentro do nó — aponta para a mensagem citada.
+
+  ```json
+  {
+    "messageType": "extendedTextMessage",
+    "message": {
+      "extendedTextMessage": { "text": "Sim, pode enviar!" }
+    },
+    "contextInfo": {
+      "stanzaId": "3EB0F1A2B3C4D5E6F708",
+      "participant": "5511888887777@s.whatsapp.net",
+      "quotedMessage": {
+        "conversation": "Posso enviar hoje para o endereço antigo?"
+      }
+    }
+  }
+  ```
+
+  O `stanzaId` é o **wamid da mensagem citada** — é assim que você amarra a resposta à pergunta.
+  :::
+
+  :::tab{title="Imagem"}
+  `messageType: "imageMessage"`. A legenda, quando existe, vem em `caption`.
+
+  ```json
+  {
+    "imageMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7118-24/...",
+      "mimetype": "image/jpeg",
+      "caption": "Segue o comprovante",
+      "fileLength": 187432,
+      "height": 1280,
+      "width": 960,
+      "directPath": "/v/t62.7118-24/...",
+      "mediaKeyTimestamp": 1773494400,
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5NWYzYTAt.../download?token=1789012345.9f3a1c7e"
+    }
+  }
+  ```
+
+  Use o `downloadMediaUrl` — não o `url`. O `url` é o blob criptografado do WhatsApp e você não conseguiria decifrá-lo sozinho.
+  :::
+
+  :::tab{title="Vídeo"}
+  `messageType: "videoMessage"`. `seconds` é a duração.
+
+  ```json
+  {
+    "videoMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7161-24/...",
+      "mimetype": "video/mp4",
+      "caption": "Olha o barulho que está fazendo",
+      "fileLength": 2847193,
+      "seconds": 14,
+      "height": 848,
+      "width": 480,
+      "directPath": "/v/t62.7161-24/...",
+      "mediaKeyTimestamp": 1773494400,
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5NWYzYTAt.../download?token=1789012345.9f3a1c7e"
+    }
+  }
+  ```
+  :::
+
+  :::tab{title="Áudio de voz"}
+  `messageType: "audioMessage"` com **`ptt: true`**. É o áudio gravado apertando o microfone.
+
+  ```json
+  {
+    "audioMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7117-24/...",
+      "mimetype": "audio/ogg; codecs=opus",
+      "fileLength": 8432,
+      "seconds": 7,
+      "ptt": true,
+      "directPath": "/v/t62.7117-24/...",
+      "mediaKeyTimestamp": 1773494400,
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5NWYzYTAt.../download?token=1789012345.9f3a1c7e"
+    }
+  }
+  ```
+
+  **`ptt` é o que separa um áudio de voz de um arquivo de música.** Os dois chegam como `audioMessage`; só o flag distingue. Se você transcreve áudios, é aqui que você decide o que vale a pena mandar para o modelo.
+  :::
+
+  :::tab{title="Áudio (arquivo)"}
+  `messageType: "audioMessage"` com **`ptt: false`** — o contato anexou um arquivo de áudio em vez de gravar.
+
+  ```json
+  {
+    "audioMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7114-24/...",
+      "mimetype": "audio/mpeg",
+      "fileLength": 3214567,
+      "seconds": 201,
+      "ptt": false,
+      "directPath": "/v/t62.7114-24/...",
+      "mediaKeyTimestamp": 1773494400,
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5NWYzYTAt.../download?token=1789012345.9f3a1c7e"
+    }
+  }
+  ```
+  :::
+
+  :::tab{title="Documento"}
+  `messageType: "documentMessage"`. `fileName` é o nome original do arquivo, e `pageCount` aparece em PDFs.
+
+  ```json
+  {
+    "documentMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7119-24/...",
+      "mimetype": "application/pdf",
+      "fileName": "nota-fiscal-4821.pdf",
+      "caption": "Minha nota fiscal",
+      "fileLength": 94213,
+      "pageCount": 2,
+      "directPath": "/v/t62.7119-24/...",
+      "mediaKeyTimestamp": 1773494400,
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5NWYzYTAt.../download?token=1789012345.9f3a1c7e"
+    }
+  }
+  ```
+  :::
+
+  :::tab{title="Figurinha"}
+  `messageType: "stickerMessage"`. Sempre WebP.
+
+  ```json
+  {
+    "stickerMessage": {
+      "url": "https://mmg.whatsapp.net/v/t62.7161-24/...",
+      "mimetype": "image/webp",
+      "fileLength": 12874,
+      "height": 512,
+      "width": 512,
+      "isAnimated": false,
+      "isAvatar": false,
+      "isAiSticker": false,
+      "isLottie": false,
+      "stickerSentTs": 1773494400123,
+      "directPath": "/v/t62.7161-24/...",
+      "mediaKeyTimestamp": 1773494400,
+      "downloadMediaUrl": "https://api.pingonotify.com/v3/connections/media/eyJjIjoiMDE5NWYzYTAt.../download?token=1789012345.9f3a1c7e"
+    }
+  }
+  ```
+  :::
+
+  :::tab{title="Reação"}
+  `messageType: "reactionMessage"` — o contato reagiu com um emoji a uma mensagem existente.
+
+  ```json
+  {
+    "reactionMessage": {
+      "text": "👍",
+      "key": { "id": "3EB0F1A2B3C4D5E6F708" }
+    }
+  }
+  ```
+
+  O `key.id` é o wamid da **mensagem que recebeu a reação**, não da reação em si. Uma reação removida chega com `text` vazio.
+  :::
+::::
+
+::warning
+**Nem todo tipo de mensagem tem payload hoje.** O `message` é filtrado por uma lista fixa de nós conhecidos, e o que não está nela é descartado — o evento chega, `messageType` diz o tipo certo, mas `message` vem **`{}` vazio**.
+
+Isso afeta: **respostas de botão** (`buttonsResponseMessage`), **escolhas de lista** (`listResponseMessage`), **localização** (`locationMessage`), **cartão de contato** (`contactMessage`) e **enquetes** (`pollCreationMessage`).
+
+Na prática: se você enviar botões com `POST /chats/messages/send-button`, **o webhook não vai te dizer em qual botão o contato tocou**. Enquanto isso não muda, trate esses tipos lendo o `messageType` e busque o conteúdo pelo histórico da conversa.
+::
+
+### Baixando a mídia
+
+Você nunca precisa falar com o WhatsApp para buscar um anexo. Toda mensagem de mídia traz um **`downloadMediaUrl`** pronto para uso — um link assinado, válido por **7 dias**, que entrega os bytes brutos direto do Pingo:
+
+```bash
+curl -L "<downloadMediaUrl>" -o comprovante.jpg
+```
+
+A assinatura está dentro da URL, então isso não precisa de `apikey` — e é justamente o que permite ao consumidor do seu webhook baixar o arquivo diretamente, sem guardar uma credencial do Pingo.
+
+::note
+O `downloadMediaUrl` só é anexado quando a mídia é referenciável. Em uma conexão **oficial** isso depende de a Meta ter devolvido um `media_id`; sem ele o campo simplesmente não aparece. Sempre teste a existência antes de usar.
+::
+
+### Agrupamento
+
+Defina `messageGroupDelay` (1 a 300 segundos) e o Pingo segura as mensagens de um contato por esse tempo e as entrega como **um array**, em vez de uma requisição por mensagem. Útil quando a pessoa manda cinco mensagens seguidas e você prefere raciocinar sobre todas de uma vez.
+
+O envelope é o mesmo — o que muda é que `data` vira uma **lista** dos mesmos objetos que você receberia individualmente:
+
+```json
+{
+  "event": "messages.upsert",
+  "connectionId": "0195f3a0-1234-7890-abcd-ef0123456789",
+  "remoteJid": "5511999998888@s.whatsapp.net",
+  "sender": "5511888887777@s.whatsapp.net",
+  "data": [
+    {
+      "key": { "remoteJid": "5511999998888@s.whatsapp.net", "fromMe": false, "id": "3EB0AAA" },
+      "pushName": "Ana",
+      "status": "DELIVERY_ACK",
+      "messageType": "conversation",
+      "message": { "conversation": "Oi!" },
+      "contextInfo": null,
+      "source": "android",
+      "isAiMessage": false
+    },
+    {
+      "key": { "remoteJid": "5511999998888@s.whatsapp.net", "fromMe": false, "id": "3EB0BBB" },
+      "pushName": "Ana",
+      "status": "DELIVERY_ACK",
+      "messageType": "conversation",
+      "message": { "conversation": "esqueci de dizer: pode ser depois das 18h" },
+      "contextInfo": null,
+      "source": "android",
+      "isAiMessage": false
+    }
+  ]
+}
+```
+
+::warning
+Com `messageGroupDelay` ligado, **`data` é um array** — não um objeto. Um handler escrito para o caso simples quebra em silêncio ao ligar o agrupamento. Trate os dois com `const mensagens = Array.isArray(body.data) ? body.data : [body.data]`.
+::
+
+Ligue também `enableSimulateTyping` e o Pingo mostra "digitando…" para o contato enquanto a janela de agrupamento corre — a espera passa a parecer intencional em vez de lentidão.
+
+### Verificando a assinatura
+
+Defina `hmacEnabled: true` e toda entrega passa a ser assinada. Leia o segredo uma vez e guarde:
+
+```bash
+curl https://api.pingonotify.com/v3/webhooks/{id}/secret \
+  -H "apikey: sk_live_..."
+```
+
+Cada requisição passa a levar dois headers:
+
+| Header | Valor |
+|---|---|
+| `X-Pingo-Signature-256` | `sha256=` seguido do HMAC-SHA256 em hexadecimal |
+| `X-Pingo-Timestamp` | Unix, em segundos |
+
+A assinatura é calculada sobre o timestamp e o **corpo bruto**, unidos por um ponto — o timestamp entra no material assinado justamente para que uma entrega antiga e válida não possa ser reenviada contra você depois.
+
+```
+assinatura = "sha256=" + HMAC_SHA256(`${timestamp}.${corpoBruto}`, signingSecret).hex()
+```
+
+::warning
+Verifique contra o **corpo bruto da requisição**, exatamente como ele chegou. Se o seu framework já fez o parse do JSON e você o re-serializa para conferir, a ordem das chaves ou os espaços podem diferir e a assinatura não vai bater.
+::
+
+```js
+import { createHmac, timingSafeEqual } from 'node:crypto';
+
+function verificar(corpoBruto, headers, segredo) {
+  const timestamp = headers['x-pingo-timestamp'];
+  const recebida  = headers['x-pingo-signature-256'];
+
+  // Rejeita qualquer coisa com mais de cinco minutos.
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) return false;
+
+  const esperada = 'sha256=' + createHmac('sha256', segredo)
+    .update(`${timestamp}.${corpoBruto}`)
+    .digest('hex');
+
+  const a = Buffer.from(esperada);
+  const b = Buffer.from(recebida ?? '');
+  return a.length === b.length && timingSafeEqual(a, b);
+}
+```
+
+Rotacione o segredo quando quiser com `POST /v3/webhooks/{id}/secret/rotate`. O segredo antigo para de validar imediatamente.
+
+### Retentativas
+
+Responda com qualquer status **abaixo de 400** e a entrega está concluída. Responda **4xx** ou **5xx**, ou estoure o tempo, e o Pingo retenta — **3 tentativas no total**, com backoff exponencial a partir de 5 segundos. A requisição expira em 10 segundos.
+
+Faça o seu handler ser **idempotente**: uma retentativa pode entregar uma mensagem que você já processou. Deduplique pelo id da mensagem (`data.key.id`).
+
+## Webhooks do helpdesk
+
+Estes carregam eventos da caixa compartilhada, não do WhatsApp.
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/helpdesk/webhooks \
+  -H "apikey: sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://exemplo.com/hooks/helpdesk",
+    "subscriptions": ["helpdesk.conversation.created", "helpdesk.message.created"],
+    "signingSecret": "um-segredo-que-voce-escolhe"
+  }'
+```
+
+Restrinja um webhook a uma única caixa com `inboxId`, ou omita para receber eventos do workspace inteiro.
+
+::warning
+O Pingo gera um `signingSecret` se você omitir — mas **nunca o devolve**. Se você quer verificar assinaturas, forneça o seu próprio segredo na criação.
+::
+
+### Os eventos do helpdesk
+
+São 21, e todos são assináveis:
+
+| | |
+|---|---|
+| **Conversas** | `helpdesk.conversation.created` · `helpdesk.conversation.updated` · `helpdesk.conversation.status_changed` · `helpdesk.conversation.assignee_changed` · `helpdesk.conversation.priority_changed` · `helpdesk.conversation.labels_changed` · `helpdesk.conversation.deleted` · `helpdesk.conversation.read` · `helpdesk.conversation.ai_agent_changed` |
+| **Mensagens** | `helpdesk.message.created` · `helpdesk.message.updated` · `helpdesk.message.deleted` · `helpdesk.message.status_changed` · `helpdesk.mention.created` |
+| **Etiquetas** | `helpdesk.label.created` · `helpdesk.label.updated` · `helpdesk.label.deleted` |
+| **Outros** | `helpdesk.csat.response_received` · `helpdesk.sla.missed` · `helpdesk.contact_sync.updated` · `helpdesk.conversation_sync.updated` |
+
+### O envelope
+
+Todo evento do helpdesk chega assim — e o `data` é o próprio objeto do evento, que sempre repete o `type` dentro de si:
+
+```json
+{
+  "event": "helpdesk.message.created",
+  "data": { "type": "helpdesk.message.created", "accountId": "0195f3a0-...", "...": "..." },
+  "deliveredAt": "2026-07-14T12:34:56.000Z"
+}
+```
+
+São 21 eventos. Cada aba abaixo mostra o `data` completo.
+
+::::tabs
+  :::tab{title="Conversas"}
+  **`helpdesk.conversation.created`** — uma conversa nova entrou.
+
+  ```json
+  {
+    "type": "helpdesk.conversation.created",
+    "accountId": "0195f3a0-1c2d-7e3f-8a9b-1c2d3e4f5a6b",
+    "conversationId": "0195f3b1-2c3d-7e4f-8a9b-0c1d2e3f4a5b",
+    "inboxId": "0195f3c2-3d4e-7f5a-8b9c-1d2e3f4a5b6c",
+    "contactId": "0195f3d3-4e5f-7a6b-9c8d-2e3f4a5b6c7d",
+    "status": "OPEN",
+    "priority": null,
+    "assigneeUserId": null,
+    "teamId": null
+  }
+  ```
+
+  **`helpdesk.conversation.status_changed`** — alguém resolveu, reabriu ou adiou.
+
+  ```json
+  {
+    "type": "helpdesk.conversation.status_changed",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "fromStatus": "OPEN",
+    "toStatus": "RESOLVED",
+    "actorUserId": "0195f3e4-5f6a-7b8c-9d0e-3f4a5b6c7d8e"
+  }
+  ```
+
+  Os status são `OPEN`, `PENDING`, `SNOOZED` e `RESOLVED`. Um `silent: true` aparece quando a mudança foi automática (o fim de um adiamento, por exemplo) e não gerou mensagem de atividade na linha do tempo.
+
+  **`helpdesk.conversation.assignee_changed`** — a conversa mudou de dono.
+
+  ```json
+  {
+    "type": "helpdesk.conversation.assignee_changed",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "fromAssigneeUserId": null,
+    "toAssigneeUserId": "0195f3e4-...",
+    "fromTeamId": null,
+    "toTeamId": "0195f3f5-...",
+    "actorUserId": "0195f3e4-..."
+  }
+  ```
+
+  Quando um bot de IA assume ou solta a conversa, vêm junto `fromAgentBotId` e `toAgentBotId` — o bot mora em uma coluna própria, separada do responsável humano.
+
+  **`helpdesk.conversation.priority_changed`**
+
+  ```json
+  {
+    "type": "helpdesk.conversation.priority_changed",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "fromPriority": null,
+    "toPriority": "URGENT",
+    "actorUserId": "0195f3e4-..."
+  }
+  ```
+
+  **`helpdesk.conversation.labels_changed`** — repare que ele entrega o **delta**, não a lista final.
+
+  ```json
+  {
+    "type": "helpdesk.conversation.labels_changed",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "addedLabelIds": ["0195f406-..."],
+    "removedLabelIds": [],
+    "actorUserId": "0195f3e4-..."
+  }
+  ```
+
+  **`helpdesk.conversation.updated`** — mudou algum campo que não tem evento próprio. `changedFields` diz quais.
+
+  ```json
+  {
+    "type": "helpdesk.conversation.updated",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "changedFields": ["customAttributes", "snoozedUntil"]
+  }
+  ```
+
+  **`helpdesk.conversation.read`** · **`helpdesk.conversation.deleted`**
+
+  ```json
+  {
+    "type": "helpdesk.conversation.read",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "userId": "0195f3e4-...",
+    "assigneeLastSeenAt": "2026-07-14T12:34:56.000Z"
+  }
+  ```
+
+  **`helpdesk.conversation.ai_agent_changed`** — a IA nativa do WhatsApp Business assumiu (ou soltou) o chat. Enquanto `aiAgentEnabled` for `true`, **nenhum envio sai** por aquela conversa.
+
+  ```json
+  {
+    "type": "helpdesk.conversation.ai_agent_changed",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "aiAgentEnabled": true
+  }
+  ```
+  :::
+
+  :::tab{title="Mensagens"}
+  **`helpdesk.message.created`** — o principal. A mensagem vem **hidratada** em `message`, no mesmo formato que a API REST devolve, então você renderiza sem uma segunda requisição.
+
+  ```json
+  {
+    "type": "helpdesk.message.created",
+    "accountId": "0195f3a0-...",
+    "messageId": "0195f417-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "channelType": "WHATSAPP",
+    "messageType": "INCOMING",
+    "status": "DELIVERED",
+    "isPrivate": false,
+    "senderUserId": null,
+    "senderContactId": "0195f3d3-...",
+    "message": {
+      "id": "0195f417-...",
+      "conversationId": "0195f3b1-...",
+      "content": "Oi! Meu pedido já saiu?",
+      "contentType": "TEXT",
+      "messageType": "INCOMING",
+      "status": "DELIVERED",
+      "private": false,
+      "sender": { "id": "0195f3d3-...", "name": "Ana" },
+      "attachments": [],
+      "createdAt": "2026-07-14T12:34:56.000Z"
+    }
+  }
+  ```
+
+  `messageType` é `INCOMING`, `OUTGOING`, `ACTIVITY` ou `TEMPLATE`. Uma **nota privada** não é um tipo à parte: é uma `OUTGOING` com `isPrivate: true`.
+
+  **`helpdesk.message.status_changed`** — o ciclo de vida da entrega. É como você sabe que a mensagem que você enviou realmente chegou.
+
+  ```json
+  {
+    "type": "helpdesk.message.status_changed",
+    "accountId": "0195f3a0-...",
+    "messageId": "0195f417-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "fromStatus": "PENDING",
+    "toStatus": "FAILED",
+    "externalError": "131030: Recipient not in allowed list"
+  }
+  ```
+
+  Os status são `PENDING` → `SENT` → `DELIVERED` → `READ`, com `FAILED` como desvio. **`externalError` só aparece quando `toStatus` é `FAILED`** — e é o motivo cru do provedor, ideal para mostrar no tooltip sem esperar um reload.
+
+  **`helpdesk.message.updated`** · **`helpdesk.message.deleted`**
+
+  ```json
+  {
+    "type": "helpdesk.message.deleted",
+    "accountId": "0195f3a0-...",
+    "messageId": "0195f417-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "actorUserId": "0195f3e4-...",
+    "deletedAt": "2026-07-14T12:40:00.000Z"
+  }
+  ```
+
+  **`helpdesk.mention.created`** — alguém foi @mencionado em uma nota privada.
+
+  ```json
+  {
+    "type": "helpdesk.mention.created",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "messageId": "0195f417-...",
+    "mentionedUserId": "0195f428-...",
+    "mentionerUserId": "0195f3e4-..."
+  }
+  ```
+  :::
+
+  :::tab{title="Etiquetas"}
+  **`helpdesk.label.created`** e **`helpdesk.label.updated`** trazem o estado completo, para você fazer upsert sem refetch.
+
+  ```json
+  {
+    "type": "helpdesk.label.created",
+    "accountId": "0195f3a0-...",
+    "labelId": "0195f406-...",
+    "name": "Urgente",
+    "description": "Precisa de resposta hoje",
+    "color": "#DC2626",
+    "showOnSidebar": true
+  }
+  ```
+
+  **`helpdesk.label.deleted`**
+
+  ```json
+  {
+    "type": "helpdesk.label.deleted",
+    "accountId": "0195f3a0-...",
+    "labelId": "0195f406-...",
+    "actorUserId": "0195f3e4-..."
+  }
+  ```
+  :::
+
+  :::tab{title="CSAT e SLA"}
+  **`helpdesk.csat.response_received`** — o contato respondeu à pesquisa de satisfação.
+
+  ```json
+  {
+    "type": "helpdesk.csat.response_received",
+    "accountId": "0195f3a0-...",
+    "csatSurveyResponseId": "0195f439-...",
+    "conversationId": "0195f3b1-...",
+    "messageId": "0195f417-...",
+    "rating": 5,
+    "contactId": "0195f3d3-...",
+    "assignedAgentUserId": "0195f3e4-..."
+  }
+  ```
+
+  **`helpdesk.sla.missed`** — um prazo estourou. `eventType` diz qual: primeira resposta, resposta seguinte, ou resolução.
+
+  ```json
+  {
+    "type": "helpdesk.sla.missed",
+    "accountId": "0195f3a0-...",
+    "conversationId": "0195f3b1-...",
+    "inboxId": "0195f3c2-...",
+    "appliedSlaId": "0195f44a-...",
+    "slaPolicyId": "0195f45b-...",
+    "assigneeUserId": "0195f3e4-...",
+    "eventType": "FIRST_RESPONSE"
+  }
+  ```
+
+  ::note
+  **`helpdesk.sla.missed` é o único evento que não é transmitido pelo websocket.** Ele chega no seu webhook e cria uma notificação no app — mas nenhum evento de socket dispara para ele. Se você depende de SLA em tempo real, o webhook é o único caminho.
+  ::
+  :::
+
+  :::tab{title="Sincronização"}
+  Estes dois são **snapshots de progresso**: o mesmo evento dispara várias vezes durante um run, com os contadores subindo. Faça upsert pelo `runId` e reaja pelo `status`.
+
+  **`helpdesk.contact_sync.updated`**
+
+  ```json
+  {
+    "type": "helpdesk.contact_sync.updated",
+    "accountId": "0195f3a0-...",
+    "runId": "0195f46c-...",
+    "connectionId": "0195f3a0-...",
+    "status": "running",
+    "totalCount": 1240,
+    "processedCount": 380,
+    "createdCount": 350,
+    "updatedCount": 28,
+    "skippedCount": 2,
+    "failedCount": 0,
+    "errorMessage": null
+  }
+  ```
+
+  **`helpdesk.conversation_sync.updated`** — o backfill do histórico. Aqui os contadores contam **mensagens** (`skippedCount` são as duplicadas por wamid), e `conversationsCount` conta as conversas tocadas.
+
+  ```json
+  {
+    "type": "helpdesk.conversation_sync.updated",
+    "accountId": "0195f3a0-...",
+    "runId": "0195f47d-...",
+    "inboxId": "0195f3c2-...",
+    "connectionId": "0195f3a0-...",
+    "status": "completed",
+    "totalCount": 8400,
+    "processedCount": 8400,
+    "createdCount": 8112,
+    "updatedCount": 0,
+    "skippedCount": 288,
+    "failedCount": 0,
+    "conversationsCount": 214,
+    "errorMessage": null
+  }
+  ```
+  :::
+::::
+
+Headers:
+
+| Header | Valor |
+|---|---|
+| `X-Helpdesk-Event` | O nome do evento |
+| `X-Helpdesk-Signature` | O HMAC-SHA256 do corpo, em hexadecimal |
+
+Aqui a assinatura cobre **apenas o corpo** — não há timestamp no material assinado:
+
+```
+assinatura = HMAC_SHA256(corpoBruto, signingSecret).hex()
+```
+
+As retentativas seguem a mesma política dos webhooks de conexão: 3 tentativas, backoff exponencial a partir de 5 segundos, timeout de 10 segundos.
+
+Antes de subir para produção, dispare uma entrega de teste no seu endpoint — ela roda na hora e reporta o que o seu servidor respondeu:
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/helpdesk/webhooks/{id}/test \
+  -H "apikey: sk_live_..."
+```
+
+```json
+{ "status": 200, "durationMs": 143 }
+```
+
+## Enviando mensagens *para dentro* do Pingo
+
+Os webhooks acima são de saída. O **canal de API** é a direção contrária: uma caixa de entrada que não é um número de WhatsApp, na qual o seu próprio aplicativo injeta mensagens.
+
+Crie uma caixa com `channelType: "API"`. A resposta de criação devolve a credencial como `inboundWebhookSecret`; leituras posteriores da caixa de API devolvem a mesma credencial como `channelConfig.hmacToken`.
+
+```bash
+curl -X POST https://api.pingonotify.com/v3/helpdesk/inboxes \
+  -H "apikey: sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{ "name": "Widget do site", "channelType": "API" }'
+```
+
+Depois injete a mensagem de um cliente:
+
+```bash
+curl -X POST https://api.pingonotify.com/webhooks/helpdesk/{inboxId} \
+  -H "x-helpdesk-token: <inboundWebhookSecret>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sourceId": "seu-id-de-mensagem-123",
+    "content": "Meu pedido já foi enviado?",
+    "sender": { "name": "Ana", "email": "ana@exemplo.com" }
+  }'
+```
+
+Defina `channelConfig.hmacMandatory: true` na caixa para exigir `x-helpdesk-token` ou `x-helpdesk-signature`. Quando ele é `false` ou omitido, uma requisição sem nenhuma das credenciais é aceita; uma credencial presente, mas inválida, é sempre rejeitada.
+
+O contato é resolvido ou criado automaticamente, uma conversa abre, e os seus agentes respondem na caixa compartilhada como em qualquer outra.
+
+Para receber as respostas, defina `channelConfig.webhookUrl` na caixa. O Pingo vai fazer `POST` de cada mensagem de saída para lá, assinada com o mesmo segredo:
+
+```json
+{
+  "event": "message.created",
+  "data": {
+    "sourceId": "0195f3d3-...",
+    "recipientIdentifier": "ana@exemplo.com",
+    "content": "Sim, saiu para entrega hoje de manhã.",
+    "attachments": []
+  },
+  "deliveredAt": "2026-07-14T12:35:10.000Z"
+}
+```
+
+Responda com `{ "sourceId": "seu-proprio-id" }` e o Pingo passa a guardar o seu id para aquela mensagem — o que permite reportar a entrega de volta depois:
+
+```bash
+curl -X POST https://api.pingonotify.com/webhooks/helpdesk/{inboxId} \
+  -H "x-helpdesk-token: <inboundWebhookSecret>" \
+  -H "Content-Type: application/json" \
+  -d '{ "event": "status_update", "sourceId": "seu-proprio-id", "status": "READ" }'
+```

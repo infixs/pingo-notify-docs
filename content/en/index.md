@@ -1,0 +1,20 @@
+---
+title: "Introduction to Pingo Notify"
+description: "Connect WhatsApp to your systems, automate workflows, and send messages."
+icon: "sparkles"
+---
+
+**Pingo Notify** is the missing layer between WhatsApp and your applications.  
+It removes technical complexity and provides a ready-to-use infrastructure for building automations, integrations, and modern conversational experiences.
+
+With it, you can:
+
+- Send **text, media, documents, audio, video, and sticker** messages
+- Manage multiple devices from a single dashboard
+- Quickly integrate with **WordPress**, **n8n**, APIs, and Webhooks
+- Receive real-time events from WhatsApp
+- Optionally enable the **Official WhatsApp Business API** with a verified badge
+
+::card{title="Getting started" icon="rocket" to="/en/connections" horizontal}
+Get started in minutes and have your first connection up and running.
+::
